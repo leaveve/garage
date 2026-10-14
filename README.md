@@ -28,3 +28,7 @@ Les visiteurs peuvent consulter le catalogue, les clients peuvent réserver une 
 - Ajouter et supprimer des voitures du catalogue
 - Bloquer / débloquer l'accès d'un client ou d'un membre du personnel
 - Supprimer des comptes
+
+## Journal 
+
+Le détail de toutes mes étapes de travail est dans [docs/journal.md](docs/journal.md).
