@@ -918,4 +918,30 @@ evokitty@macbook-air-de-evo1 garage % symfony console make:controller Home
 
            
   Success! 
+
+##  le formulaire d’inscription 19/10/2026
+evokitty@MacBook-Air-de-evo garage % symfony console make:registration-form
+ Creating a registration form for App\Entity\User
+
+ Do you want to add a #[UniqueEntity] validation attribute to your User class to make sure duplicate accounts aren't created? (yes/no) [yes]:
+ > 
+
+ Do you want to send an email to verify the user's email address after registration? (yes/no) [yes]:
+ > no
+
+ Do you want to automatically authenticate the user after registration? (yes/no) [yes]:
+ > 
+
+ Do you want to generate PHPUnit tests? [Experimental] (yes/no) [no]:
+ > no
+
+ updated: src/Entity/User.php
+ created: src/Form/RegistrationFormType.php
+ created: src/Controller/RegistrationController.php
+ created: templates/registration/register.html.twig
+
            
+  Success! 
+
+  apres bien sur il faut compléter le formulaire avc nom prenom...
+
