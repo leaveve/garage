@@ -959,3 +959,9 @@ access_control:
         - { path: ^/gestion, roles: ROLE_STAFF }
         - { path: ^/mon-compte, roles: ROLE_USER }
 
+## le blocage des comptes
+Quand le gérant mettra actif à false sur un compte, la personne ne doit plus pouvoir se connecter
+
+Symfony a un outil prévu pour ça, le UserChecker
+source;
+https://symfony.com/doc/current/security/user_checkers.html
