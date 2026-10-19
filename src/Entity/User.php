@@ -74,6 +74,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->rendezVouses = new ArrayCollection();
+        $this->dateInscription = new \DateTimeImmutable();
+        $this->actif = true;  // chaque nouveau compte reçoit automatiquement la date du jour et est actif.
     }
 
     public function getId(): ?int

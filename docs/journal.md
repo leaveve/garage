@@ -158,7 +158,7 @@ evokitty@MacBook-Air-de-evo garage % symfony console make:entity User
     **je me suois trompé en créant l'entité user j'ai msi certains champs en non nullable alors qu'il devrait l'etre
     donc j'ai du corriger a la main dans user.php en ajotant nullable : true et un ? dans les setters**
 
-## les entités simples
+## les entités simples.   ## 14/10/2016
 - symfony console make:entity Marque
 -> evokitty@MacBook-Air-de-evo garage % symfony console make:entity Marque
  created: src/Entity/Marque.php
@@ -183,7 +183,7 @@ evokitty@MacBook-Air-de-evo garage % symfony console make:entity User
 
  **pareil pour TypeVoiture , Transmision et Carburant**
 
-## 14/10/2016
+
  
 ## l’entité Modele
  evokitty@macbook-air-de-evo1 garage % symfony console make:entity Modele
@@ -884,4 +884,38 @@ evokitty@macbook-air-de-evo1 garage % symfony console doctrine:migrations:migrat
 
 
 
+## Authentification : login, logout  15/1/2026
 
+
+evokitty@macbook-air-de-evo1 garage % symfony console make:security:form-login
+
+ Choose a name for the controller class (e.g. SecurityController) [SecurityController]:
+ > 
+
+ Do you want to generate a '/logout' URL? (yes/no) [yes]:
+ > 
+
+ Do you want to generate PHPUnit tests? [Experimental] (yes/no) [no]:
+ > 
+
+ created: src/Controller/SecurityController.php
+ created: templates/security/login.html.twig
+ updated: config/packages/security.yaml
+
+           
+  Success! 
+
+
+## la page d’accueil
+
+evokitty@macbook-air-de-evo1 garage % symfony console make:controller Home
+
+ Do you want to generate PHPUnit tests? [Experimental] (yes/no) [no]:
+ > 
+
+ created: src/Controller/HomeController.php
+ created: templates/home/index.html.twig
+
+           
+  Success! 
+           
