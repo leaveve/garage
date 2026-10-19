@@ -945,3 +945,17 @@ evokitty@MacBook-Air-de-evo garage % symfony console make:registration-form
 
   apres bien sur il faut compléter le formulaire avc nom prenom...
 
+##  les rôles
+ajout 
+role_hierarchy:
+        ROLE_STAFF: ROLE_USER
+        ROLE_ADMIN: ROLE_STAFF 
+dans securit.yaml
+
+et 
+
+access_control:
+         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/gestion, roles: ROLE_STAFF }
+        - { path: ^/mon-compte, roles: ROLE_USER }
+
