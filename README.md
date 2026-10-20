@@ -29,6 +29,21 @@ Les visiteurs peuvent consulter le catalogue, les clients peuvent réserver une 
 - Bloquer / débloquer l'accès d'un client ou d'un membre du personnel
 - Supprimer des comptes
 
+## Comptes de test
+
+Après `symfony console doctrine:fixtures:load`, ces comptes sont disponibles.
+Mot de passe pour tous : `password`
+
+| Rôle | Email |
+|------|-------|
+| Gérant (`ROLE_ADMIN`) | gerant@garage.fr |
+| Personnel (`ROLE_STAFF`) | staff1@garage.fr, staff2@garage.fr, staff3@garage.fr |
+| Client (`ROLE_USER`) | client1@garage.fr à client9@garage.fr |
+| Client bloqué | client10@garage.fr |
+
+⚠️ `doctrine:fixtures:load` vide entièrement la base avant de la remplir.
+
 ## Journal 
+
 
 Le détail de toutes mes étapes de travail est dans [docs/journal.md](docs/journal.md).
