@@ -976,5 +976,99 @@ creation des fichier CarburantFixtures.php , MarqueFixtures.php , TransmissionFi
 puis on teste avec 
 symfony console doctrine:fixtures:load
 
-## 
+## créer l’entité Photo 
+pour la gellerie de photo pr chaque voiture
+
+evokitty@MacBook-Air-de-evo garage % symfony console make:entity Photo
+ created: src/Entity/Photo.php
+ created: src/Repository/PhotoRepository.php
+ 
+ Entity generated! Now let's add some fields!
+ You can always add more fields later manually or by re-running this command.
+
+ New property name (press <return> to stop adding fields):
+ > nomFichier
+
+ Field type (enter ? to see all types) [string]:
+ > 
+
+ Field length [255]:
+ > 
+
+ Can this field be null in the database (nullable) (yes/no) [no]:
+ > 
+
+ updated: src/Entity/Photo.php
+
+ Add another property? Enter the property name (or press <return> to stop adding fields):
+ > ordre
+
+ Field type (enter ? to see all types) [string]:
+ > integer
+
+ Can this field be null in the database (nullable) (yes/no) [no]:
+ >  
+
+ updated: src/Entity/Photo.php
+
+ Add another property? Enter the property name (or press <return> to stop adding fields):
+ > voiture
+
+ Field type (enter ? to see all types) [string]:
+ > relation
+
+ What class should this entity be related to?:
+ > Voiture
+
+What type of relationship is this?
+ ------------ --------------------------------------------------------------------- 
+  Type         Description                                                          
+ ------------ --------------------------------------------------------------------- 
+  ManyToOne    Each Photo relates to (has) one Voiture.                             
+               Each Voiture can relate to (can have) many Photo objects.            
+                                                                                    
+  OneToMany    Each Photo can relate to (can have) many Voiture objects.            
+               Each Voiture relates to (has) one Photo.                             
+                                                                                    
+  ManyToMany   Each Photo can relate to (can have) many Voiture objects.            
+               Each Voiture can also relate to (can also have) many Photo objects.  
+                                                                                    
+  OneToOne     Each Photo relates to (has) exactly one Voiture.                     
+               Each Voiture also relates to (has) exactly one Photo.                
+ ------------ --------------------------------------------------------------------- 
+
+ Relation type? [ManyToOne, OneToMany, ManyToMany, OneToOne]:
+ > ManyToOne
+
+ Is the Photo.voiture property allowed to be null (nullable)? (yes/no) [yes]:
+ > no
+
+ Do you want to add a new property to Voiture so that you can access/update Photo objects from it - e.g. $voiture->getPhotos()? (yes/no) [yes]:
+ > 
+
+ A new property will also be added to the Voiture class so that you can access the related Photo objects from it.
+
+ New field name inside Voiture [photos]:
+ > 
+
+ Do you want to activate orphanRemoval on your relationship?
+ A Photo is "orphaned" when it is removed from its related Voiture.
+ e.g. $voiture->removePhoto($photo)
+ 
+ NOTE: If a Photo may *change* from one Voiture to another, answer "no".
+
+ Do you want to automatically delete orphaned App\Entity\Photo objects (orphanRemoval)? (yes/no) [no]:
+ > yes
+
+ updated: src/Entity/Photo.php
+ updated: src/Entity/Voiture.php
+
+ Add another property? Enter the property name (or press <return> to stop adding fields):
+ > 
+
+
+           
+  Success! 
+
+  
 
