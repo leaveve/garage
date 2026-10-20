@@ -965,3 +965,15 @@ Quand le gérant mettra actif à false sur un compte, la personne ne doit plus p
 Symfony a un outil prévu pour ça, le UserChecker
 source;
 https://symfony.com/doc/current/security/user_checkers.html
+
+## installer les bundles des fixtures 20/10/2026
+
+composer require --dev orm-fixtures
+composer require --dev fakerphp/faker
+
+## les données de ref
+creation des fichier CarburantFixtures.php , MarqueFixtures.php , TransmissionFixtures , TypeVoitureFixtures 
+puis 
+symfony console doctrine:fixtures:load
+
+
