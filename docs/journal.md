@@ -973,7 +973,8 @@ composer require --dev fakerphp/faker
 
 ## les données de ref
 creation des fichier CarburantFixtures.php , MarqueFixtures.php , TransmissionFixtures , TypeVoitureFixtures 
-puis 
+puis on teste avec 
 symfony console doctrine:fixtures:load
 
+## 
 
