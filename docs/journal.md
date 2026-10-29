@@ -1072,8 +1072,12 @@ What type of relationship is this?
 
 
 
-## layout ##27/10/2026
+## layout moche pr le moment a changer plus tard ##27/10/2026
 
 Bootstrap dans base.html.twig
 
 Création  dossier templates/partials/, puis le fichier header.html.twig dedans pout le header
+
+## catalogue 
+symfony console make:controller Catalogue 
+puis le template 

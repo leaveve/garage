@@ -13,8 +13,7 @@
                     <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
                 </li>
                 <li class="nav-item">
-                    {# À remplacer par path('app_catalogue') quand la page existera #}
-                    <a class="nav-link" href="#">Catalogue</a>
+                    <a class="nav-link" href="{{ path('app_catalogue') }}">Catalogue</a>
                 </li>
 
                 {% if is_granted('ROLE_STAFF') %}
