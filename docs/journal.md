@@ -1070,5 +1070,10 @@ What type of relationship is this?
            
   Success! 
 
-  
 
+
+## layout ##27/10/2026
+
+Bootstrap dans base.html.twig
+
+Création  dossier templates/partials/, puis le fichier header.html.twig dedans pout le header
