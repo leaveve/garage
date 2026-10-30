@@ -81,4 +81,31 @@ final class RendezVousController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/{id}/annuler', name: 'app_rendez_vous_annuler', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function annuler(RendezVous $rdv, Request $request, EntityManagerInterface $em): Response
+    {
+        // Un client ne peut annuler que SES rendez-vous
+        if ($rdv->getClient() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Vérification du jeton CSRF 
+        if (!$this->isCsrfTokenValid('annuler' . $rdv->getId(), $request->getPayload()->getString('_token'))) {
+            $this->addFlash('danger', 'Action non autorisée.');
+            return $this->redirectToRoute('app_rendez_vous_index');
+        }
+
+        // On ne peut annuler qu'une demande encore en attente
+        if ($rdv->getStatut() !== 'en_attente') {
+            $this->addFlash('warning', 'Ce rendez-vous ne peut plus être annulé.');
+            return $this->redirectToRoute('app_rendez_vous_index');
+        }
+
+        $rdv->setStatut('annule');
+        $em->flush();
+
+        $this->addFlash('success', 'Votre demande de rendez-vous a été annulée.');
+        return $this->redirectToRoute('app_rendez_vous_index');
+    }
 }

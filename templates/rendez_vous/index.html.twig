@@ -18,6 +18,7 @@
                         <th>Date du rendez-vous</th>
                         <th>Location</th>
                         <th>Statut</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,6 +48,17 @@
                                     <span class="badge bg-danger">Refusé</span>
                                 {% elseif rdv.statut == 'termine' %}
                                     <span class="badge bg-secondary">Terminé</span>
+                                {% elseif rdv.statut == 'annule' %}
+                                    <span class="badge bg-dark border border-secondary">Annulé</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if rdv.statut == 'en_attente' %}
+                                    <form method="post" action="{{ path('app_rendez_vous_annuler', {id: rdv.id}) }}"
+                                        onsubmit="return confirm('Annuler cette demande de rendez-vous ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ rdv.id) }}">
+                                        <button class="btn btn-sm btn-outline-danger">Annuler</button>
+                                    </form>
                                 {% endif %}
                             </td>
                         </tr>

@@ -1113,3 +1113,16 @@ route `/mon-compte/rendez-vous` qui affiche seulement les rendez-vous du client 
 tableau avec la voiture, le motif, la date, les dates de location et le statut en badge de couleur
 après l'envoi d'une demande, le client est redirigé vers « Mes rendez-vous »
 lien ajouté dans le header
+
+### annuler un rendez-vous
+le client peut annuler une demande seulement si elle est encore « en attente » (après c'est le garage qui gère)
+on ne supprime pas le rendez-vous, on passe son statut à `annule` pour garder une trace
+
+route `/mon-compte/rendez-vous/{id}/annuler` en POST 
+
+3 vérifications dans le contrôleur :
+- le rendez-vous appartient bien au client connecté 
+- le jeton CSRF est valide 
+- le statut est bien « en_attente »
+
+dans « Mes rendez-vous »  un petit formulaire avec un bouton Annuler, un `confirm()` pour éviter les clics par erreur, et un badge « Annulé »
