@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modèles — Administration{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Modèles</h1>
+        <a href="{{ path('app_admin_modele_new') }}" class="btn btn-light">+ Ajouter un modèle</a>
+    </div>
+
+    <table class="table table-dark table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Type</th>
+                <th>Voitures</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for modele in modeles %}
+                <tr>
+                    <td>{{ modele.marque.libelle }}</td>
+                    <td>{{ modele.libelle }}</td>
+                    <td>{{ modele.typeVoiture.libelle }}</td>
+                    <td>{{ modele.voitures|length }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('app_admin_modele_edit', {id: modele.id}) }}" class="btn btn-sm btn-light">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5" class="text-secondary">Aucun modèle.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

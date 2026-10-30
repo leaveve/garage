@@ -1157,3 +1157,12 @@ j'ai mis `#[IsGranted('ROLE_ADMIN')]` sur les méthodes `new()` et `delete()`
 ### mise en forme de la gestion des voitures
 - liste en français avec la photo principale, le prix de vente, le prix de location et le statut en badge de couleur
 - le bouton « Ajouter une voiture » ne s'affiche que pour le gérant (`is_granted('ROLE_ADMIN')`)
+
+## gestion des marques et des modèles par le gérant
+**pourquoi :** les marques et les modèles existaient seulement grâce aux fixtures. si le garage reçoit une nouvelle marque ou un nouveau modèle, le gérant doit pouvoir l'ajouter avant d'ajouter la voiture
+
+### les marques
+`symfony console make:crud Marque` avec `Admin\MarqueController` → routes en `/admin/marque`, donc réservées au gérant par mon `access_control` (ROLE_ADMIN)
+
+### les modèles
+même principe que les marques : CRUD dans `Admin/ModeleController`, routes en `/admin/modele` (réservées au gérant)

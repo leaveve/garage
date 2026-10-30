@@ -1,0 +1,9 @@
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div class="col-md-6">
+        {{ form_row(form.libelle, {attr: {class: 'form-control'}}) }}
+    </div>
+
+    <button class="btn btn-light btn-lg mt-3">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

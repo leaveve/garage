@@ -4,7 +4,14 @@
     <h5 class="mt-2 mb-3">La voiture</h5>
     <div class="row g-3">
         <div class="col-md-3">{{ form_row(form.marque, {attr: {class: 'form-select'}}) }}</div>
-    <div class="col-md-3">{{ form_row(form.modele, {attr: {class: 'form-select'}}) }}</div>
+        <div class="col-md-3">
+            {{ form_row(form.modele, {attr: {class: 'form-select'}}) }}
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_admin_modele_new') }}" id="lien-ajout-modele" class="small text-secondary">
+                    Modèle absent ? L'ajouter
+                </a>
+            {% endif %}
+        </div>
         <div class="col-md-2">{{ form_row(form.annee, {attr: {class: 'form-control'}}) }}</div>
         <div class="col-md-2">{{ form_row(form.kilometrage, {attr: {class: 'form-control'}}) }}</div>
         <div class="col-md-2">{{ form_row(form.puissanceCh, {attr: {class: 'form-control'}}) }}</div>
@@ -37,6 +44,12 @@
 
         // Recharge la liste des modèles de la marque choisie
         async function chargerModeles(garderSelection) {
+            // Le lien « Modèle absent ? » pré-sélectionne la marque choisie
+            const lien = document.getElementById('lien-ajout-modele');
+            if (lien) {
+                lien.href = '/admin/modele/new' + (selectMarque.value ? '?marque=' + selectMarque.value : '');
+            }
+
             const modeleActuel = garderSelection ? selectModele.value : '';
             selectModele.innerHTML = '<option value="">Choisir un modèle</option>';
 

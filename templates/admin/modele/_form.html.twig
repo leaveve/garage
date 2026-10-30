@@ -1,0 +1,11 @@
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div class="row g-3">
+        <div class="col-md-4">{{ form_row(form.marque, {attr: {class: 'form-select'}}) }}</div>
+        <div class="col-md-4">{{ form_row(form.libelle, {attr: {class: 'form-control'}}) }}</div>
+        <div class="col-md-4">{{ form_row(form.typeVoiture, {attr: {class: 'form-select'}}) }}</div>
+    </div>
+
+    <button class="btn btn-light btn-lg mt-3">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Marques — Administration{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Marques</h1>
+        <a href="{{ path('app_admin_marque_new') }}" class="btn btn-light">+ Ajouter une marque</a>
+    </div>
+
+    <table class="table table-dark table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Marque</th>
+                <th>Modèles</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for marque in marques %}
+                <tr>
+                    <td>{{ marque.libelle }}</td>
+                    <td>{{ marque.modeles|length }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('app_admin_marque_edit', {id: marque.id}) }}" class="btn btn-sm btn-light">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="3" class="text-secondary">Aucune marque.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
