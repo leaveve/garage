@@ -85,8 +85,7 @@
             {# Bouton de rdv #}
             {% if voiture.statut == 'disponible' %}
                 {% if app.user %}
-                    {# À remplacer par le lien vers le formulaire de rendez-vous #}
-                    <a href="#" class="btn btn-light btn-lg w-100">Demander un rendez-vous</a>
+                    <a href="{{ path('app_rendez_vous_new', {id: voiture.id}) }}" class="btn btn-light btn-lg w-100">Demander un rendez-vous</a>
                 {% else %}
                     <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg w-100">
                         Connectez-vous pour prendre rendez-vous
