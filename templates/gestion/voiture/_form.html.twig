@@ -1,4 +1,29 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-light btn-lg mt-3">{{ button_label|default('Enregistrer') }}</button>
+    {{ form_errors(form) }}
+
+    <h5 class="mt-2 mb-3">La voiture</h5>
+    <div class="row g-3">
+        <div class="col-md-6">{{ form_row(form.modele, {attr: {class: 'form-select'}}) }}</div>
+        <div class="col-md-2">{{ form_row(form.annee, {attr: {class: 'form-control'}}) }}</div>
+        <div class="col-md-2">{{ form_row(form.kilometrage, {attr: {class: 'form-control'}}) }}</div>
+        <div class="col-md-2">{{ form_row(form.puissanceCh, {attr: {class: 'form-control'}}) }}</div>
+        <div class="col-md-3">{{ form_row(form.transmission, {attr: {class: 'form-select'}}) }}</div>
+        <div class="col-md-3">{{ form_row(form.carburant, {attr: {class: 'form-select'}}) }}</div>
+        <div class="col-md-4">{{ form_row(form.couleur, {attr: {class: 'form-control'}}) }}</div>
+        <div class="col-md-2">{{ form_row(form.couleurHex, {attr: {class: 'form-control form-control-color'}}) }}</div>
+        <div class="col-12">{{ form_row(form.description, {attr: {class: 'form-control'}}) }}</div>
+    </div>
+
+    <h5 class="mt-4 mb-3">Vente et location</h5>
+    <div class="row g-3">
+        <div class="col-md-2 pt-4">{{ form_row(form.aVendre, {attr: {class: 'form-check-input'}}) }}</div>
+        <div class="col-md-4">{{ form_row(form.prixVente, {attr: {class: 'form-control'}}) }}</div>
+        <div class="col-md-6"></div>
+        <div class="col-md-2 pt-4">{{ form_row(form.aLouer, {attr: {class: 'form-check-input'}}) }}</div>
+        <div class="col-md-4">{{ form_row(form.prixLocationJour, {attr: {class: 'form-control'}}) }}</div>
+        <div class="col-md-3">{{ form_row(form.caution, {attr: {class: 'form-control'}}) }}</div>
+        <div class="col-md-3">{{ form_row(form.statut, {attr: {class: 'form-select'}}) }}</div>
+    </div>
+
+    <button class="btn btn-light btn-lg mt-4">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}

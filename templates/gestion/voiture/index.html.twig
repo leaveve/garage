@@ -1,57 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Voiture index{% endblock %}
+{% block title %}Gestion des voitures — Garage{% endblock %}
 
 {% block body %}
-    <h1>Voiture index</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Gestion des voitures</h1>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_gestion_voiture_new') }}" class="btn btn-light">+ Ajouter une voiture</a>
+        {% endif %}
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Annee</th>
-                <th>Kilometrage</th>
-                <th>PuissanceCh</th>
-                <th>Couleur</th>
-                <th>CouleurHex</th>
-                <th>PrixVente</th>
-                <th>PrixLocationJour</th>
-                <th>Caution</th>
-                <th>Description</th>
-                <th>AVendre</th>
-                <th>ALouer</th>
-                <th>Statut</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for voiture in voitures %}
-            <tr>
-                <td>{{ voiture.id }}</td>
-                <td>{{ voiture.annee }}</td>
-                <td>{{ voiture.kilometrage }}</td>
-                <td>{{ voiture.puissanceCh }}</td>
-                <td>{{ voiture.couleur }}</td>
-                <td>{{ voiture.couleurHex }}</td>
-                <td>{{ voiture.prixVente }}</td>
-                <td>{{ voiture.prixLocationJour }}</td>
-                <td>{{ voiture.caution }}</td>
-                <td>{{ voiture.description }}</td>
-                <td>{{ voiture.aVendre ? 'Yes' : 'No' }}</td>
-                <td>{{ voiture.aLouer ? 'Yes' : 'No' }}</td>
-                <td>{{ voiture.statut }}</td>
-                <td>
-                    <a href="{{ path('app_gestion_voiture_show', {'id': voiture.id}) }}">show</a>
-                    <a href="{{ path('app_gestion_voiture_edit', {'id': voiture.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="14">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_gestion_voiture_new') }}">Create new</a>
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Voiture</th>
+                    <th>Année · km</th>
+                    <th>Vente</th>
+                    <th>Location</th>
+                    <th>Statut</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for voiture in voitures %}
+                    <tr>
+                        <td>
+                            {% set photo = voiture.photos|first %}
+                            {% if photo %}
+                                <img src="{{ asset('uploads/voitures/' ~ photo.nomFichier) }}"
+                                     class="rounded" style="width:80px" alt="">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small class="text-secondary">{{ voiture.modele.marque.libelle }}</small><br>
+                            {{ voiture.modele.libelle }}
+                        </td>
+                        <td>{{ voiture.annee }} · {{ voiture.kilometrage|number_format(0, ',', ' ') }} km</td>
+                        <td>
+                            {{ voiture.aVendre ? voiture.prixVente|number_format(0, ',', ' ') ~ ' €' : '—' }}
+                        </td>
+                        <td>
+                            {{ voiture.aLouer ? voiture.prixLocationJour|number_format(0, ',', ' ') ~ ' € / j' : '—' }}
+                        </td>
+                        <td>
+                            {% if voiture.statut == 'disponible' %}
+                                <span class="badge bg-success">Disponible</span>
+                            {% elseif voiture.statut == 'louee' %}
+                                <span class="badge bg-info text-dark">Louée</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Vendue</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ path('app_voiture_show', {id: voiture.id}) }}" class="btn btn-sm btn-outline-light">Voir</a>
+                            <a href="{{ path('app_gestion_voiture_edit', {id: voiture.id}) }}" class="btn btn-sm btn-light">Modifier</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="7" class="text-secondary">Aucune voiture.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

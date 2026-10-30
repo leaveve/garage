@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Voiture{% endblock %}
+{% block title %}Ajouter une voiture — Garage{% endblock %}
 
 {% block body %}
-    <h1>Create new Voiture</h1>
+    <a href="{{ path('app_gestion_voiture_index') }}" class="text-secondary text-decoration-none">← Retour à la liste</a>
+    <h1 class="mt-3 mb-4">Ajouter une voiture</h1>
 
-    {{ include('gestion/voiture/_form.html.twig') }}
-
-    <a href="{{ path('app_gestion_voiture_index') }}">back to list</a>
+    {{ include('gestion/voiture/_form.html.twig', {button_label: 'Ajouter la voiture'}) }}
 {% endblock %}

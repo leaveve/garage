@@ -18,7 +18,10 @@
 
                 {% if is_granted('ROLE_STAFF') %}
                     <li class="nav-item">
-                        <a class="nav-link text-warning" href="{{ path('app_gestion_rdv_index') }}">Gestion</a>
+                        <a class="nav-link text-warning" href="{{ path('app_gestion_rdv_index') }}">Rendez-vous</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-warning" href="{{ path('app_gestion_voiture_index') }}">Voitures</a>
                     </li>
                 {% endif %}
 

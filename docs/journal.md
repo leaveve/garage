@@ -1139,3 +1139,21 @@ changements de statut autorisés (dans une constante `TRANSITIONS`) :
 - accepté → terminé ou refusé
 - refusé, annulé ou terminé → plus rien
 
+## gestion des voitures (branche feature/gestion-voitures)
+
+### le CRUD
+symfony console make:crud Voiture avec le nom Gestion\VoitureController
+→ le contrôleur va dans `Controller/Gestion/`, les routes en `/gestion/voiture` (donc protégées par ROLE_STAFF) et les templates dans `templates/gestion/voiture/`
+
+le personnel peut voir et modifier, mais seul le gérant peut ajouter et supprimer :
+j'ai mis `#[IsGranted('ROLE_ADMIN')]` sur les méthodes `new()` et `delete()`
+
+**corrections du formulaire généré (VoitureType) :**
+- les menus des relations affichaient les id (`choice_label => 'id'`) → j'ai mis `libelle`, et pour le modèle une petite fonction qui affiche « Marque Modèle »
+- `couleurHex` en `ColorType` (sélecteur de couleur)
+- `aVendre` / `aLouer` en cases à cocher pas obligatoires
+- `statut` en liste déroulante (disponible / louée / vendue)
+
+### mise en forme de la gestion des voitures
+- liste en français avec la photo principale, le prix de vente, le prix de location et le statut en badge de couleur
+- le bouton « Ajouter une voiture » ne s'affiche que pour le gérant (`is_granted('ROLE_ADMIN')`)

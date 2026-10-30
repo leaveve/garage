@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Voiture{% endblock %}
+{% block title %}Modifier la voiture — Garage{% endblock %}
 
 {% block body %}
-    <h1>Edit Voiture</h1>
+    <a href="{{ path('app_gestion_voiture_index') }}" class="text-secondary text-decoration-none">← Retour à la liste</a>
+    <h1 class="mt-3 mb-4">Modifier : {{ voiture.modele.marque.libelle }} {{ voiture.modele.libelle }}</h1>
 
-    {{ include('gestion/voiture/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('gestion/voiture/_form.html.twig', {button_label: 'Enregistrer les modifications'}) }}
 
-    <a href="{{ path('app_gestion_voiture_index') }}">back to list</a>
-
-    {{ include('gestion/voiture/_delete_form.html.twig') }}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="mt-4">{{ include('gestion/voiture/_delete_form.html.twig') }}</div>
+    {% endif %}
 {% endblock %}
