@@ -3,7 +3,8 @@
 
     <h5 class="mt-2 mb-3">La voiture</h5>
     <div class="row g-3">
-        <div class="col-md-6">{{ form_row(form.modele, {attr: {class: 'form-select'}}) }}</div>
+        <div class="col-md-3">{{ form_row(form.marque, {attr: {class: 'form-select'}}) }}</div>
+    <div class="col-md-3">{{ form_row(form.modele, {attr: {class: 'form-select'}}) }}</div>
         <div class="col-md-2">{{ form_row(form.annee, {attr: {class: 'form-control'}}) }}</div>
         <div class="col-md-2">{{ form_row(form.kilometrage, {attr: {class: 'form-control'}}) }}</div>
         <div class="col-md-2">{{ form_row(form.puissanceCh, {attr: {class: 'form-control'}}) }}</div>
@@ -27,3 +28,40 @@
 
     <button class="btn btn-light btn-lg mt-4">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}
+
+<script>
+    (() => {
+        const selectMarque = document.getElementById('voiture_marque');
+        const selectModele = document.getElementById('voiture_modele');
+        if (!selectMarque || !selectModele) return;
+
+        // Recharge la liste des modèles de la marque choisie
+        async function chargerModeles(garderSelection) {
+            const modeleActuel = garderSelection ? selectModele.value : '';
+            selectModele.innerHTML = '<option value="">Choisir un modèle</option>';
+
+            if (!selectMarque.value) {
+                selectModele.disabled = true;
+                return;
+            }
+
+            // Appel de la route JSON
+            const reponse = await fetch('/gestion/voiture/modeles/' + selectMarque.value);
+            const modeles = await reponse.json();
+
+            modeles.forEach(modele => {
+                const option = new Option(modele.libelle, modele.id);
+                if (String(modele.id) === modeleActuel) {
+                    option.selected = true;
+                }
+                selectModele.add(option);
+            });
+            selectModele.disabled = false;
+        }
+
+        
+        selectMarque.addEventListener('change', () => chargerModeles(false));
+
+        chargerModeles(true);
+    })();
+</script>

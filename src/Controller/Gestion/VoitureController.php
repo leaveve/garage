@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Entity\Marque;
 
 #[Route('/gestion/voiture')]
 final class VoitureController extends AbstractController
@@ -67,6 +68,20 @@ final class VoitureController extends AbstractController
             'voiture' => $voiture,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/modeles/{id}', name: 'app_gestion_voiture_modeles', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function modelesParMarque(Marque $marque): Response
+    {
+        $modeles = [];
+        foreach ($marque->getModeles() as $modele) {
+            $modeles[] = [
+                'id' => $modele->getId(),
+                'libelle' => $modele->getLibelle(),
+            ];
+        }
+
+        return $this->json($modeles);
     }
 
     #[Route('/{id}', name: 'app_gestion_voiture_delete', methods: ['POST'])]

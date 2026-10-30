@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Entity\Marque;
 
 class VoitureType extends AbstractType
 {
@@ -23,13 +24,22 @@ class VoitureType extends AbstractType
     {
         $builder
             // La voiture
+                        ->add('marque', EntityType::class, [
+                'class' => Marque::class,
+                'choice_label' => 'libelle',
+                'placeholder' => 'Choisir une marque',
+                // Ce champ n'existe pas dans Voiture : il sert juste à filtrer les modèles
+                'mapped' => false,
+                // En modification, on pré-sélectionne la marque du modèle actuel
+                'data' => $options['data']?->getModele()?->getMarque(),
+            ])
             ->add('modele', EntityType::class, [
                 'class' => Modele::class,
                 'label' => 'Modèle',
-                // On affiche « Marque Modèle » au lieu de l'id
-                'choice_label' => fn (Modele $m) => $m->getMarque()->getLibelle() . ' ' . $m->getLibelle(),
+                'choice_label' => 'libelle',
                 'placeholder' => 'Choisir un modèle',
             ])
+            
             ->add('annee', IntegerType::class, ['label' => 'Année'])
             ->add('kilometrage', IntegerType::class, ['label' => 'Kilométrage (km)'])
             ->add('puissanceCh', IntegerType::class, ['label' => 'Puissance (ch)'])
