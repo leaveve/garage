@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des rendez-vous — Garage{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Gestion des rendez-vous</h1>
+
+    {# Filtres par statut #}
+    {% set filtres = {'': 'Tous', 'en_attente': 'En attente', 'accepte': 'Acceptés', 'termine': 'Terminés', 'refuse': 'Refusés', 'annule': 'Annulés'} %}
+    <div class="mb-4">
+        {% for valeur, label in filtres %}
+            <a href="{{ path('app_gestion_rdv_index', valeur ? {statut: valeur} : {}) }}"
+               class="btn btn-sm {{ statutActuel == valeur ? 'btn-light' : 'btn-outline-light' }} me-1 mb-1">
+                {{ label }}
+            </a>
+        {% endfor %}
+    </div>
+
+    {% if rendezVous is empty %}
+        <p class="text-secondary">Aucun rendez-vous.</p>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Client</th>
+                        <th>Voiture</th>
+                        <th>Motif</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rdv in rendezVous %}
+                        <tr>
+                            <td>{{ rdv.dateHeure|date('d/m/Y à H:i') }}</td>
+                            <td>
+                                {{ rdv.client.prenom }} {{ rdv.client.nom }}<br>
+                                <small class="text-secondary">{{ rdv.client.email }} · {{ rdv.client.telephone ?? '—' }}</small>
+                            </td>
+                            <td>
+                                <a href="{{ path('app_voiture_show', {id: rdv.voiture.id}) }}" class="text-light">
+                                    {{ rdv.voiture.modele.marque.libelle }} {{ rdv.voiture.modele.libelle }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ rdv.motif|capitalize }}
+                                {% if rdv.motif == 'location' %}
+                                    <br><small class="text-secondary">
+                                        du {{ rdv.dateDebutLocation|date('d/m') }} au {{ rdv.dateFinLocation|date('d/m/Y') }}
+                                    </small>
+                                {% endif %}
+                                {% if rdv.message %}
+                                    <br><small class="text-secondary fst-italic">« {{ rdv.message }} »</small>
+                                {% endif %}
+                            </td>
+                            <td>{{ rdv.statut|replace({'_': ' '})|capitalize }}</td>
+                            <td>
+                                {% set actions = {
+                                    'en_attente': {'accepte': ['Accepter', 'success'], 'refuse': ['Refuser', 'danger']},
+                                    'accepte':    {'termine': ['Terminer', 'secondary'], 'refuse': ['Refuser', 'danger']}
+                                } %}
+                                {% for nouveau, bouton in actions[rdv.statut] ?? {} %}
+                                    <form method="post" action="{{ path('app_gestion_rdv_statut', {id: rdv.id}) }}" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('statut' ~ rdv.id) }}">
+                                        <input type="hidden" name="statut" value="{{ nouveau }}">
+                                        <button class="btn btn-sm btn-{{ bouton[1] }}">{{ bouton[0] }}</button>
+                                    </form>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

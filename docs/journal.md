@@ -1126,3 +1126,16 @@ route `/mon-compte/rendez-vous/{id}/annuler` en POST
 - le statut est bien « en_attente »
 
 dans « Mes rendez-vous »  un petit formulaire avec un bouton Annuler, un `confirm()` pour éviter les clics par erreur, et un badge « Annulé »
+
+
+### gestion des rendez-vous (personnel)
+symfony console make:controller Gestion\\RendezVous → le contrôleur est créé dans un sous-dossier `src/Controller/Gestion/`
+
+le personnel voit tous les rendez-vous avec les infos du client (email, téléphone) pour pouvoir le recontacter
+filtres par statut
+
+changements de statut autorisés (dans une constante `TRANSITIONS`) :
+- en attente → accepté ou refusé
+- accepté → terminé ou refusé
+- refusé, annulé ou terminé → plus rien
+

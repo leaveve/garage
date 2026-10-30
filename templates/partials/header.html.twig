@@ -18,7 +18,7 @@
 
                 {% if is_granted('ROLE_STAFF') %}
                     <li class="nav-item">
-                        <a class="nav-link text-warning" href="#">Gestion</a>
+                        <a class="nav-link text-warning" href="{{ path('app_gestion_rdv_index') }}">Gestion</a>
                     </li>
                 {% endif %}
 
