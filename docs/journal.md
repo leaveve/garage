@@ -1092,3 +1092,24 @@ carrousel Bootstrap pour la galerie + des miniatures cliquables
 tableau des caractéristiques et bouton de rendez-vous qui change selon si on est connecté ou pas
 toute la carte du catalogue est cliquable grâce à `stretched-link`
 
+## demande de rendez-vous (branche feature/rendez-vous) 
+
+### le formulaire
+j'ai créé `src/Form/RendezVousType.php` avc  motif (menu déroulant), date et heure, dates de location et message
+le client ne choisit PAS le client, la voiture, le statut ni la date de création, c'est le contrôleur qui les remplit
+les motifs proposés dépendent de la voiture pas de loc si elle n'est pas à louer, pas de achat si elle n'est pas à vendre
+
+### le contrôleur
+symfony console make:controller RendezVous
+toutes les routes commencent par `/mon-compte/rendez-vous`, donc elles sont protégées par mon `access_control` (ROLE_USER)
+vérifications :
+- si la voiture n'est plus disponible → message et retour à la fiche
+- si le motif est location → les dates sont obligatoires
+- si ce n'est pas une location → je vide les dates de location
+- statut `en_attente` et date de création remplis automatiquement
+
+### mes rendez-vous
+route `/mon-compte/rendez-vous` qui affiche seulement les rendez-vous du client connecté (`findBy(['client' => $this->getUser()])`)
+tableau avec la voiture, le motif, la date, les dates de location et le statut en badge de couleur
+après l'envoi d'une demande, le client est redirigé vers « Mes rendez-vous »
+lien ajouté dans le header

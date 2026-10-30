@@ -10,10 +10,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\RendezVousRepository;
 
 #[Route('/mon-compte/rendez-vous')]
 final class RendezVousController extends AbstractController
 {
+    #[Route('', name: 'app_rendez_vous_index')]
+    public function index(RendezVousRepository $rendezVousRepository): Response
+    {
+         // Seulement les rendez-vous du client connecté, les plus récents d'abord
+            $rendezVous = $rendezVousRepository->findBy(
+            ['client' => $this->getUser()],
+            ['dateCreation' => 'DESC']
+            );
+
+        return $this->render('rendez_vous/index.html.twig', [
+        'rendezVous' => $rendezVous,
+        ]);
+    }
+
+
     #[Route('/nouveau/{id}', name: 'app_rendez_vous_new', requirements: ['id' => '\d+'])]
     public function new(Voiture $voiture, Request $request, EntityManagerInterface $em): Response
     {
@@ -56,7 +72,7 @@ final class RendezVousController extends AbstractController
                 $em->flush();
 
                 $this->addFlash('success', 'Votre demande de rendez-vous a bien été envoyée. Le garage vous recontactera.');
-                return $this->redirectToRoute('app_voiture_show', ['id' => $voiture->getId()]);
+                return $this->redirectToRoute('app_rendez_vous_index');
             }
         }
 

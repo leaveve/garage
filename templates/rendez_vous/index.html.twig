@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes rendez-vous — Garage{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Mes rendez-vous</h1>
+
+    {% if rendezVous is empty %}
+        <p class="text-secondary">Vous n'avez encore aucune demande de rendez-vous.</p>
+        <a href="{{ path('app_catalogue') }}" class="btn btn-light">Voir le catalogue</a>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Voiture</th>
+                        <th>Motif</th>
+                        <th>Date du rendez-vous</th>
+                        <th>Location</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rdv in rendezVous %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('app_voiture_show', {id: rdv.voiture.id}) }}" class="text-light">
+                                    {{ rdv.voiture.modele.marque.libelle }} {{ rdv.voiture.modele.libelle }}
+                                </a>
+                            </td>
+                            <td>{{ rdv.motif|capitalize }}</td>
+                            <td>{{ rdv.dateHeure|date('d/m/Y à H:i') }}</td>
+                            <td>
+                                {% if rdv.motif == 'location' %}
+                                    du {{ rdv.dateDebutLocation|date('d/m/Y') }}
+                                    au {{ rdv.dateFinLocation|date('d/m/Y') }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if rdv.statut == 'en_attente' %}
+                                    <span class="badge bg-warning text-dark">En attente</span>
+                                {% elseif rdv.statut == 'accepte' %}
+                                    <span class="badge bg-success">Accepté</span>
+                                {% elseif rdv.statut == 'refuse' %}
+                                    <span class="badge bg-danger">Refusé</span>
+                                {% elseif rdv.statut == 'termine' %}
+                                    <span class="badge bg-secondary">Terminé</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
