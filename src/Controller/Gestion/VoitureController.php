@@ -70,13 +70,37 @@ final class VoitureController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_gestion_voiture_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Voiture $voiture, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$voiture->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($voiture);
-            $entityManager->flush();
+        if (!$this->isCsrfTokenValid('delete' . $voiture->getId(), $request->getPayload()->getString('_token'))) {
+            $this->addFlash('danger', 'Action non autorisée.');
+            return $this->redirectToRoute('app_gestion_voiture_index');
         }
 
-        return $this->redirectToRoute('app_gestion_voiture_index', [], Response::HTTP_SEE_OTHER);
+        // On compte les rendez-vous encore en cours
+        $rdvEnCours = $voiture->getRendezVouses()->filter(
+            fn ($rdv) => in_array($rdv->getStatut(), ['en_attente', 'accepte'], true)
+        );
+
+        if (count($rdvEnCours) > 0) {
+            $this->addFlash('warning', sprintf(
+                'Impossible de supprimer cette voiture : elle a %d rendez-vous en cours. Traitez-les d\'abord dans la gestion des rendez-vous.',
+                count($rdvEnCours)
+            ));
+            return $this->redirectToRoute('app_gestion_voiture_edit', ['id' => $voiture->getId()]);
+        }
+
+        // Tous les rendez-vous sont traités
+        foreach ($voiture->getRendezVouses() as $rdv) {
+            $entityManager->remove($rdv);
+        }
+
+        // Les photos sont supprimées automatiquement grâce à orphanRemoval
+        $entityManager->remove($voiture);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'La voiture a été supprimée.');
+        return $this->redirectToRoute('app_gestion_voiture_index');
     }
 }
