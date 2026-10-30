@@ -11,11 +11,14 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\File;
 use App\Entity\Marque;
 
 class VoitureType extends AbstractType
@@ -87,6 +90,24 @@ class VoitureType extends AbstractType
                     'Disponible' => 'disponible',
                     'Louée' => 'louee',
                     'Vendue' => 'vendue',
+                ],
+            ])
+
+            // Photos (gérées à la main dans le contrôleur)
+            ->add('nouvellesPhotos', FileType::class, [
+                'label' => 'Ajouter des photos',
+                'mapped' => false,      // ce n'est pas un champ de Voiture
+                'required' => false,
+                'multiple' => true,     // plusieurs fichiers d'un coup
+                'attr' => ['accept' => 'image/*'],
+                'constraints' => [
+                    new All(constraints: [
+                        new File(
+                            maxSize: '5M',
+                            mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+                            mimeTypesMessage: 'Seules les images JPG, PNG ou WEBP sont acceptées.',
+                        ),
+                    ]),
                 ],
             ]);
     }

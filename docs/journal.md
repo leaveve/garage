@@ -1166,3 +1166,6 @@ j'ai mis `#[IsGranted('ROLE_ADMIN')]` sur les méthodes `new()` et `delete()`
 
 ### les modèles
 même principe que les marques : CRUD dans `Admin/ModeleController`, routes en `/admin/modele` (réservées au gérant)
+
+### upload des photos
+le personnel peut ajouter, supprimer et choisir la photo principale d'une voiture
