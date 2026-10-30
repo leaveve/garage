@@ -1,20 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil — Garage{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    {# Bandeau de présentation #}
+    <section class="p-5 mb-5 rounded-3 bg-black border border-secondary text-center">
+        <h1 class="display-5 fw-bold">Voitures de sport & de prestige</h1>
+        <p class="lead text-secondary col-lg-8 mx-auto">
+            Achat ou location de voitures d'exception : JDM, muscle cars, supercars.
+            Prenez rendez-vous en ligne et venez les découvrir au garage.
+        </p>
+        <a href="{{ path('app_catalogue') }}" class="btn btn-light btn-lg mt-3">Voir le catalogue</a>
+        {% if not app.user %}
+            <a href="{{ path('app_register') }}" class="btn btn-outline-light btn-lg mt-3 ms-2">Créer un compte</a>
+        {% endif %}
+    </section>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {# Dernières arrivées #}
+    <h2 class="mb-4">Dernières arrivées</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for voiture in dernieresVoitures %}
+            <div class="col">
+                {% include 'partials/carte_voiture.html.twig' %}
+            </div>
+        {% else %}
+            <p class="text-secondary">Aucune voiture disponible pour le moment.</p>
+        {% endfor %}
+    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/Users/evokitty/garage/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/Users/evokitty/garage/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+    {# Comment ça marche #}
+    <section class="row text-center mt-5 g-4">
+        <div class="col-md-4">
+            <h5>1. Choisissez</h5>
+            <p class="text-secondary">Parcourez notre catalogue de voitures à vendre ou à louer.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>2. Prenez rendez-vous</h5>
+            <p class="text-secondary">Demandez un essai, une location ou un achat en ligne.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>3. Venez au garage</h5>
+            <p class="text-secondary">Notre équipe vous accueille pour finaliser sur place.</p>
+        </div>
+    </section>
 {% endblock %}

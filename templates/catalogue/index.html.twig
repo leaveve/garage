@@ -11,45 +11,7 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for voiture in voitures %}
                 <div class="col">
-                    <div class="card h-100 bg-black text-light border-secondary">
-
-                        {# Photo principale la première de la galerie #}
-                        {% set photo = voiture.photos|first %}
-                        {% if photo %}
-                            <img src="{{ asset('uploads/voitures/' ~ photo.nomFichier) }}"
-                                 class="card-img-top" alt="{{ voiture.modele.libelle }}">
-                        {% endif %}
-
-                        <div class="card-body">
-                            <p class="text-secondary small mb-1">
-                                {{ voiture.modele.marque.libelle }} · {{ voiture.modele.typeVoiture.libelle }}
-                            </p>
-                            <h5 class="card-title">{{ voiture.modele.libelle }}</h5>
-
-                            <p class="small mb-2">
-                                {{ voiture.annee }} · {{ voiture.kilometrage|number_format(0, ',', ' ') }} km
-                                · {{ voiture.puissanceCh }} ch
-                            </p>
-
-                            {# Pastille de couleur #}
-                            <p class="small mb-3">
-                                <span class="d-inline-block rounded-circle border me-1"
-                                      style="width:12px;height:12px;background:{{ voiture.couleurHex ?? '#888' }}"></span>
-                                {{ voiture.couleur }}
-                            </p>
-
-                            {# Badges et prix #}
-                            {% if voiture.aVendre %}
-                                <span class="badge bg-success">À vendre</span>
-                                <strong class="ms-1">{{ voiture.prixVente|number_format(0, ',', ' ') }} €</strong>
-                                <br>
-                            {% endif %}
-                            {% if voiture.aLouer %}
-                                <span class="badge bg-info text-dark">À louer</span>
-                                <strong class="ms-1">{{ voiture.prixLocationJour|number_format(0, ',', ' ') }} € / jour</strong>
-                            {% endif %}
-                        </div>
-                    </div>
+                    {% include 'partials/carte_voiture.html.twig' %}
                 </div>
             {% endfor %}
         </div>
