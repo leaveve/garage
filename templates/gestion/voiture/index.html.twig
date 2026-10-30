@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voiture index{% endblock %}
+
+{% block body %}
+    <h1>Voiture index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Annee</th>
+                <th>Kilometrage</th>
+                <th>PuissanceCh</th>
+                <th>Couleur</th>
+                <th>CouleurHex</th>
+                <th>PrixVente</th>
+                <th>PrixLocationJour</th>
+                <th>Caution</th>
+                <th>Description</th>
+                <th>AVendre</th>
+                <th>ALouer</th>
+                <th>Statut</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for voiture in voitures %}
+            <tr>
+                <td>{{ voiture.id }}</td>
+                <td>{{ voiture.annee }}</td>
+                <td>{{ voiture.kilometrage }}</td>
+                <td>{{ voiture.puissanceCh }}</td>
+                <td>{{ voiture.couleur }}</td>
+                <td>{{ voiture.couleurHex }}</td>
+                <td>{{ voiture.prixVente }}</td>
+                <td>{{ voiture.prixLocationJour }}</td>
+                <td>{{ voiture.caution }}</td>
+                <td>{{ voiture.description }}</td>
+                <td>{{ voiture.aVendre ? 'Yes' : 'No' }}</td>
+                <td>{{ voiture.aLouer ? 'Yes' : 'No' }}</td>
+                <td>{{ voiture.statut }}</td>
+                <td>
+                    <a href="{{ path('app_gestion_voiture_show', {'id': voiture.id}) }}">show</a>
+                    <a href="{{ path('app_gestion_voiture_edit', {'id': voiture.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_gestion_voiture_new') }}">Create new</a>
+{% endblock %}
