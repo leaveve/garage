@@ -8,6 +8,8 @@
                                  class="card-img-top" alt="{{ voiture.modele.libelle }}">
                         {% endif %}
 
+                        <a href="{{ path('app_voiture_show', {id: voiture.id}) }}" class="stretched-link"></a>
+
                         <div class="card-body">
                             <p class="text-secondary small mb-1">
                                 {{ voiture.modele.marque.libelle }} · {{ voiture.modele.typeVoiture.libelle }}

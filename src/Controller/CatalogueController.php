@@ -6,6 +6,7 @@ use App\Repository\VoitureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\Voiture;
 
 final class CatalogueController extends AbstractController
 {
@@ -20,6 +21,13 @@ final class CatalogueController extends AbstractController
 
         return $this->render('catalogue/index.html.twig', [
             'voitures' => $voitures,
+        ]);
+    }
+
+    #[Route('/catalogue/{id}', name: 'app_voiture_show', requirements: ['id' => '\d+'])]
+    public function show(Voiture $voiture): Response {
+        return $this->render('catalogue/show.html.twig', [
+            'voiture' => $voiture,
         ]);
     }
 }

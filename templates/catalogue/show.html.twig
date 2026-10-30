@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ voiture.modele.marque.libelle }} {{ voiture.modele.libelle }} — Garage{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_catalogue') }}" class="text-secondary text-decoration-none">← Retour au catalogue</a>
+
+    <div class="row mt-3 g-5">
+        {# Colonne gauche : la galerie #}
+        <div class="col-lg-7">
+            {% if voiture.photos is not empty %}
+                <div id="galerie" class="carousel slide rounded overflow-hidden border border-secondary">
+                    <div class="carousel-inner">
+                        {% for photo in voiture.photos %}
+                            <div class="carousel-item {{ loop.first ? 'active' }}">
+                                <img src="{{ asset('uploads/voitures/' ~ photo.nomFichier) }}"
+                                     class="d-block w-100" alt="Photo {{ loop.index }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#galerie" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#galerie" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+
+                {# Miniatures sous le carrousel #}
+                <div class="d-flex gap-2 mt-2">
+                    {% for photo in voiture.photos %}
+                        <img src="{{ asset('uploads/voitures/' ~ photo.nomFichier) }}"
+                             class="rounded border border-secondary" style="width:90px;cursor:pointer"
+                             data-bs-target="#galerie" data-bs-slide-to="{{ loop.index0 }}" alt="Miniature {{ loop.index }}">
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-secondary">Aucune photo pour cette voiture.</p>
+            {% endif %}
+        </div>
+
+        {# Colonne droite es informations #}
+        <div class="col-lg-5">
+            <p class="text-secondary mb-1">
+                {{ voiture.modele.marque.libelle }} · {{ voiture.modele.typeVoiture.libelle }}
+            </p>
+            <h1>{{ voiture.modele.libelle }}</h1>
+
+            {# Prix #}
+            <div class="my-3">
+                {% if voiture.aVendre %}
+                    <p class="fs-4 mb-1">
+                        <span class="badge bg-success">À vendre</span>
+                        {{ voiture.prixVente|number_format(0, ',', ' ') }} €
+                    </p>
+                {% endif %}
+                {% if voiture.aLouer %}
+                    <p class="fs-4 mb-1">
+                        <span class="badge bg-info text-dark">À louer</span>
+                        {{ voiture.prixLocationJour|number_format(0, ',', ' ') }} € / jour
+                    </p>
+                    <p class="text-secondary small">
+                        Caution : {{ voiture.caution|number_format(0, ',', ' ') }} €
+                    </p>
+                {% endif %}
+            </div>
+
+            {# Caractéristiques #}
+            <table class="table table-dark table-sm">
+                <tr><th>Année</th><td>{{ voiture.annee }}</td></tr>
+                <tr><th>Kilométrage</th><td>{{ voiture.kilometrage|number_format(0, ',', ' ') }} km</td></tr>
+                <tr><th>Puissance</th><td>{{ voiture.puissanceCh }} ch</td></tr>
+                <tr><th>Transmission</th><td>{{ voiture.transmission.libelle }}</td></tr>
+                <tr><th>Carburant</th><td>{{ voiture.carburant.libelle }}</td></tr>
+                <tr>
+                    <th>Couleur</th>
+                    <td>
+                        <span class="d-inline-block rounded-circle border me-1"
+                              style="width:12px;height:12px;background:{{ voiture.couleurHex ?? '#888' }}"></span>
+                        {{ voiture.couleur }}
+                    </td>
+                </tr>
+            </table>
+
+            {# Bouton de rdv #}
+            {% if voiture.statut == 'disponible' %}
+                {% if app.user %}
+                    {# À remplacer par le lien vers le formulaire de rendez-vous #}
+                    <a href="#" class="btn btn-light btn-lg w-100">Demander un rendez-vous</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg w-100">
+                        Connectez-vous pour prendre rendez-vous
+                    </a>
+                {% endif %}
+            {% else %}
+                <p class="alert alert-secondary">Cette voiture n'est plus disponible.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Description #}
+    {% if voiture.description %}
+        <h2 class="h4 mt-5">Description</h2>
+        <p class="text-secondary">{{ voiture.description|nl2br }}</p>
+    {% endif %}
+{% endblock %}
