@@ -1078,12 +1078,17 @@ Bootstrap dans base.html.twig
 
 Création  dossier templates/partials/, puis le fichier header.html.twig dedans pout le header
 
-## catalogue 
-symfony console make:controller Catalogue 
-puis le template 
+## catalogue
+seulement les voitures disponibles avec `findBy(['statut' => 'disponible'])`
+la photo principale c'est `voiture.photos|first`
 
 ## page d'acc
- extraire la carte voiture
+j'ai d'abord sorti la carte voiture dans un partial `partials/carte_voiture.html.twig` pour l'utiliser sur l'accueil ET le catalogue
+sur l'accueil : un bandeau, les 3 dernières voitures (`findBy` avec une limite de 3) et les 3 étapes du rendez-vous
 
- lzs fiches voitures 
- 
+## les fiches voitures
+route `/catalogue/{id}`, Symfony trouve tout seul la voiture avec l'id
+carrousel Bootstrap pour la galerie + des miniatures cliquables
+tableau des caractéristiques et bouton de rendez-vous qui change selon si on est connecté ou pas
+toute la carte du catalogue est cliquable grâce à `stretched-link`
+
