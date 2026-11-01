@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Email envoyé — Garage{% endblock %}
+
+{% block body %}
+    <div class="col-md-6 mx-auto">
+        <h1 class="mb-3">Vérifiez vos emails</h1>
+        <p>
+            Si un compte correspond à cette adresse, un email vient de vous être envoyé avec un lien pour réinitialiser votre mot de passe.
+            {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}
+        </p>
+        <p class="text-secondary">
+            Vous n'avez rien reçu ? Vérifiez vos spams ou <a href="{{ path('app_forgot_password_request') }}">recommencez</a>.
+        </p>
+    </div>
+{% endblock %}
