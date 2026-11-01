@@ -41,22 +41,16 @@ Les visiteurs consultent le catalogue, les clients demandent un rendez-vous (ach
 
 ## Installation
 
-Prérequis : PHP 8.4, Composer, Symfony CLI, PostgreSQL 16, Node (pour MailDev).
+Prérequis :PHP 8.4,Composer,Symfony,PostgreSQL 16, Node (pour MailDev).
 
-```bash
+
 git clone https://github.com/leaveve/garage.git
 cd garage
 composer install
-```
 
-Créer un fichier `.env.local` avec la connexion à la base :
 
-```
-DATABASE_URL="postgresql://utilisateur:motdepasse@127.0.0.1:5432/garage?serverVersion=16&charset=utf8"
-MAILER_DSN=smtp://localhost:1025
-```
 
-Créer la base et la remplir :
+Créer la base et la remplir:
 
 ```bash
 symfony console doctrine:database:create
@@ -64,30 +58,28 @@ symfony console doctrine:migrations:migrate
 symfony console doctrine:fixtures:load
 ```
 
-Lancer MailDev (emails visibles sur http://localhost:1080) puis le serveur :
+Lancer MailDev 
 
 ```bash
 npx maildev
 symfony serve
 ```
 
-Le fichier `php.ini` à la racine augmente la taille max des uploads (10 Mo par photo), il est lu automatiquement par `symfony serve`.
+Le fichier `php.ini` à la racine augmente la taille max des uploads 
 
 ## Comptes de test
 
 Après `symfony console doctrine:fixtures:load`, ces comptes sont disponibles.
 Mot de passe pour tous : `password`
 
-| Rôle | Email |
-|------|-------|
-| Gérant (`ROLE_ADMIN`) | gerant@garage.fr |
-| Personnel (`ROLE_STAFF`) | staff1@garage.fr, staff2@garage.fr, staff3@garage.fr |
-| Client (`ROLE_USER`) | client1@garage.fr à client9@garage.fr |
-| Client bloqué | client10@garage.fr |
+ Gérant (`ROLE_ADMIN`) ; gerant@garage.fr : password
+ Personnel (`ROLE_STAFF`) ; staff1@garage.fr, staff15@garage.fr :password
+ Client (`ROLE_USER`) ; client1@garage.fr et client15@garage.fr : password
+ Client bloqué ; client10@garage.fr et staff15@garage.fr 
 
-⚠️ `doctrine:fixtures:load` vide entièrement la base avant de la remplir.
+`doctrine:fixtures:load` vide entièrement la base avant de la remplir.
 
 ## Documentation
 
-- MCD : [docs/mcd.drawio.png](docs/mcd.drawio.png)
-- Journal de bord : le détail de toutes mes étapes de travail est dans [docs/journal.md](docs/journal.md)
+- MCD:[docs/mcd.drawio.png](docs/mcd.drawio.png)
+- Journal le détail de toutes mes étapes de travail est dans [docs/journal.md](docs/journal.md)

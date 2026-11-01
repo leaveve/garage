@@ -1159,28 +1159,22 @@ j'ai mis `#[IsGranted('ROLE_ADMIN')]` sur les méthodes `new()` et `delete()`
 - le bouton « Ajouter une voiture » ne s'affiche que pour le gérant (`is_granted('ROLE_ADMIN')`)
 
 ## gestion des marques et des modèles par le gérant
-**pourquoi :** les marques et les modèles existaient seulement grâce aux fixtures. si le garage reçoit une nouvelle marque ou un nouveau modèle, le gérant doit pouvoir l'ajouter avant d'ajouter la voiture
+**pourquoi :** les marques et les modèles existaient seulement grâce aux fixtures. si le garage reçoit une nouvelle marque ou un nouveau modèle le gérant doit pouvoir l'ajouter avant d'ajouter la voiture
 
 ### les marques
 `symfony console make:crud Marque` avec `Admin\MarqueController` → routes en `/admin/marque`, donc réservées au gérant par mon `access_control` (ROLE_ADMIN)
 
 ### les modèles
-même principe que les marques : CRUD dans `Admin/ModeleController`, routes en `/admin/modele` (réservées au gérant)
+même principe que les marques RUD dans `Admin/ModeleController`, routes en `/admin/modele` (réservées au gérant)
 
 ### upload des photos
 le personnel peut ajouter, supprimer et choisir la photo principale d'une voiture
 
 
  j'ai remplacé le `ColorType` (seulement un sélecteur) par un champ texte pour pouvoir taper le code exact, avec une contrainte `Regex` (`/^#[0-9A-Fa-f]{6}$/`) pour vérifier le format côté serveur. à côté, une pastille `<input type="color">` synchronisée en JS 
-## logos des marques
-j'ai ajouté un champ `logo` (nullable) dans l'entité Marque + une migration. dans le formulaire du gérant il y a un champ `logoFichier` non mappé, le fichier est enregistré dans `public/uploads/marques` (ignoré par git comme les photos des voitures). j'ai fait un petit partial `logo_marque` qui affiche le logo ou les initiales si y'en a pas, et je l'utilise dans la liste des marques et dans le défilé des marques sur la page d'accueil
 
-## README final
-j'ai remis le README à jour avant de l'envoyer au prof : les technos, les vraies fonctionnalités (rendez-vous au lieu des réservations, kanban, profil, invitation du personnel, mot de passe oublié, logos) et toutes les étapes d'installation pour lancer le projet
 
-## garder mes vraies photos dans le projet
-avant, les fixtures créaient 20 voitures au hasard avec Faker et mettaient des photos de démo. mais j'ai changé toutes les photos directement sur le site, et je voulais que ce soit ces photos-là qui soient dans le projet.
 
-le problème c'est que si je gardais Faker, une photo de Supra pouvait se retrouver sur une Urus. donc j'ai exporté mes voitures de la base et j'ai réécrit `VoitureFixtures` avec un tableau `getVoituresArray()` qui contient mes 13 voitures (modèle, couleur, prix, statut…) et la liste de leurs photos. `PhotoFixtures` reprend ce tableau pour mettre chaque photo sur la bonne voiture, dans le bon ordre. dans `RendezVousFixtures`, le numéro de voiture au hasard va maintenant de 1 au nombre de voitures du tableau au lieu de 1 à 20.
 
-j'ai enlevé `public/uploads/voitures` du `.gitignore` pour que les photos partent sur github, et j'ai supprimé les photos demo qui servaient plus
+## mot de passe moins strict
+sur la page « choisissez votre mot de passe » (mot de passe oublié et invitation du personnel), le formulaire généré par le bundle demandait 12 caractères minimum, un mot de passe fort (`PasswordStrength`) et pas divulgué dans une fuite (`NotCompromisedPassword`). c'était trop chiant pour tester, alors j'ai enlevé ces deux contraintes et mis 6 caractères minimum comme à l'inscription, avec les messages en français
