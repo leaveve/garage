@@ -36,7 +36,7 @@ final class ModeleController extends AbstractController
     {
         $modele = new Modele();
 
-        // Si on arrive avec ?marque=ID (depuis le formulaire voiture), on pré-sélectionne la marque
+      
         if ($marqueId = $request->query->get('marque')) {
             $modele->setMarque($entityManager->getRepository(Marque::class)->find($marqueId));
         }

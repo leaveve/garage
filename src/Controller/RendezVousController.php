@@ -18,7 +18,7 @@ final class RendezVousController extends AbstractController
     #[Route('', name: 'app_rendez_vous_index')]
     public function index(RendezVousRepository $rendezVousRepository): Response
     {
-         // Seulement les rendez-vous du client connecté, les plus récents d'abord
+         // Seulement les rendez-vous du client connecté les plus récents d'abord
             $rendezVous = $rendezVousRepository->findBy(
             ['client' => $this->getUser()],
             ['dateCreation' => 'DESC']
@@ -38,7 +38,7 @@ final class RendezVousController extends AbstractController
             return $this->redirectToRoute('app_voiture_show', ['id' => $voiture->getId()]);
         }
 
-        // On ne peut pas demander un rendez-vous pour une voiture plus disponible
+        // On ne peut pas demander un rdv pour une voiture plus disponible
         if ($voiture->getStatut() !== 'disponible') {
             $this->addFlash('warning', 'Cette voiture n\'est plus disponible.');
             return $this->redirectToRoute('app_voiture_show', ['id' => $voiture->getId()]);
@@ -90,7 +90,7 @@ final class RendezVousController extends AbstractController
     #[Route('/{id}/annuler', name: 'app_rendez_vous_annuler', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function annuler(RendezVous $rdv, Request $request, EntityManagerInterface $em): Response
     {
-        // Un client ne peut annuler que SES rendez-vous
+        // Un client ne peut annuler que Ses rdv
         if ($rdv->getClient() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }

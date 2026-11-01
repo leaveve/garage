@@ -53,7 +53,7 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Mot de passe aléatoire que personne ne connaît : l'employé choisira le sien via l'invitation
+            // Mot de passe aléatoire que personne ne connaît
             $user->setRoles(['ROLE_STAFF'])
                 ->setPassword($hasher->hashPassword($user, bin2hex(random_bytes(32))));
 

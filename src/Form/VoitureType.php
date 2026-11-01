@@ -31,9 +31,7 @@ class VoitureType extends AbstractType
                 'class' => Marque::class,
                 'choice_label' => 'libelle',
                 'placeholder' => 'Choisir une marque',
-                // Ce champ n'existe pas dans Voiture : il sert juste à filtrer les modèles
                 'mapped' => false,
-                // En modification, on pré-sélectionne la marque du modèle actuel
                 'data' => $options['data']?->getModele()?->getMarque(),
             ])
             ->add('modele', EntityType::class, [
@@ -103,12 +101,11 @@ class VoitureType extends AbstractType
                 ],
             ])
 
-            // Photos (gérées à la main dans le contrôleur)
             ->add('nouvellesPhotos', FileType::class, [
                 'label' => 'Ajouter des photos',
-                'mapped' => false,      // ce n'est pas un champ de Voiture
+                'mapped' => false,      
                 'required' => false,
-                'multiple' => true,     // plusieurs fichiers d'un coup
+                'multiple' => true,     
                 'attr' => ['accept' => 'image/*'],
                 'constraints' => [
                     new All(constraints: [

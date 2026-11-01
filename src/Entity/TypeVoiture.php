@@ -67,7 +67,6 @@ class TypeVoiture
     public function removeModele(Modele $modele): static
     {
         if ($this->modeles->removeElement($modele)) {
-            // set the owning side to null (unless already changed)
             if ($modele->getTypeVoiture() === $this) {
                 $modele->setTypeVoiture(null);
             }

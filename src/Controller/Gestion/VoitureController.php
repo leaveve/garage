@@ -97,7 +97,7 @@ final class VoitureController extends AbstractController
             return $this->redirectToRoute('app_gestion_voiture_index');
         }
 
-        // On compte les rendez-vous encore en cours
+        // On compte les rdv encore en cours
         $rdvEnCours = $voiture->getRendezVouses()->filter(
             fn ($rdv) => in_array($rdv->getStatut(), ['en_attente', 'accepte'], true)
         );
@@ -110,12 +110,12 @@ final class VoitureController extends AbstractController
             return $this->redirectToRoute('app_gestion_voiture_edit', ['id' => $voiture->getId()]);
         }
 
-        // Tous les rendez-vous sont traités
+        // tous les rdv sont traités
         foreach ($voiture->getRendezVouses() as $rdv) {
             $entityManager->remove($rdv);
         }
 
-        // Les photos sont supprimées automatiquement grâce à orphanRemoval
+       
         $entityManager->remove($voiture);
         $entityManager->flush();
 
@@ -137,7 +137,7 @@ final class VoitureController extends AbstractController
 
             $voiture->removePhoto($photo); // orphanRemoval supprime la photo en base
 
-            // On renumérote les photos restantes : 1, 2, 3...
+            
             $ordre = 1;
             foreach ($voiture->getPhotos() as $autre) {
                 $autre->setOrdre($ordre++);
@@ -172,14 +172,14 @@ final class VoitureController extends AbstractController
         return $this->redirectToRoute('app_gestion_voiture_edit', ['id' => $voiture->getId()]);
     }
 
-    // Enregistre les fichiers envoyés dans public/uploads/voitures et crée les Photo
+    // enregistre les fichiers envoyés dans public/uploads/voitures et crée les Photo
     private function ajouterPhotos(FormInterface $form, Voiture $voiture, EntityManagerInterface $entityManager): void
     {
         $fichiers = $form->get('nouvellesPhotos')->getData() ?? [];
         $ordre = count($voiture->getPhotos());
 
         foreach ($fichiers as $fichier) {
-            // Nom unique pour éviter que deux photos s'écrasent
+            // nom unique pour éviter que deux photos s'écrasent
             $nomFichier = uniqid('voiture-') . '.' . $fichier->guessExtension();
 
             $fichier->move(

@@ -1178,3 +1178,6 @@ le personnel peut ajouter, supprimer et choisir la photo principale d'une voitur
 
 ## mot de passe moins strict
 sur la page « choisissez votre mot de passe » (mot de passe oublié et invitation du personnel), le formulaire généré par le bundle demandait 12 caractères minimum, un mot de passe fort (`PasswordStrength`) et pas divulgué dans une fuite (`NotCompromisedPassword`). c'était trop chiant pour tester, alors j'ai enlevé ces deux contraintes et mis 6 caractères minimum comme à l'inscription, avec les messages en français
+
+## nettoyage des commentaires
+j'ai relu tout le code avant de l'envoyer : j'ai enlevé les commentaires en anglais générés par les commandes `make:` de symfony et raccourci certains des miens

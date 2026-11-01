@@ -67,7 +67,6 @@ class Transmission
     public function removeVoiture(Voiture $voiture): static
     {
         if ($this->voitures->removeElement($voiture)) {
-            // set the owning side to null (unless already changed)
             if ($voiture->getTransmission() === $this) {
                 $voiture->setTransmission(null);
             }
