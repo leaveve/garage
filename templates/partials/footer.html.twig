@@ -1,0 +1,39 @@
+<footer class="footer-garage">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-5">
+                <h5 class="mb-3">Drift <span class="grad">Club</span></h5>
+                <p>Vente et location de voitures de sport et d'exception. JDM, muscle cars, supercars : prenez rendez-vous en ligne et venez les découvrir sur place.</p>
+            </div>
+            <div class="col-md-3">
+                <h6 class="text-uppercase mb-3">Le garage</h6>
+                <p class="mb-1">12 avenue des Pilotes</p>
+                <p class="mb-1">38000 Grenoble</p>
+                <p class="mb-0">04 76 00 00 00</p>
+            </div>
+            <div class="col-md-2">
+                <h6 class="text-uppercase mb-3">Horaires</h6>
+                <p class="mb-1">Lun – Ven : 9h – 19h</p>
+                <p class="mb-1">Sam : 10h – 18h</p>
+                <p class="mb-0">Dim : fermé</p>
+            </div>
+            <div class="col-md-2">
+                <h6 class="text-uppercase mb-3">Liens</h6>
+                <p class="mb-1"><a href="{{ path('app_catalogue') }}">Catalogue</a></p>
+                {% if app.user %}
+                    {% if not is_granted('ROLE_STAFF') %}
+                        <p class="mb-1"><a href="{{ path('app_rendez_vous_index') }}">Mes rendez-vous</a></p>
+                    {% endif %}
+                    <p class="mb-0"><a href="{{ path('app_profil') }}">Mon profil</a></p>
+                {% else %}
+                    <p class="mb-1"><a href="{{ path('app_login') }}">Connexion</a></p>
+                    <p class="mb-0"><a href="{{ path('app_register') }}">Créer un compte</a></p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="footer-bas d-flex flex-wrap justify-content-between gap-2">
+            <span>© {{ 'now'|date('Y') }} Drift Club — Projet de cours Symfony</span>
+            <span>Site de démonstration</span>
+        </div>
+    </div>
+</footer>

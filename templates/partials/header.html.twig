@@ -1,61 +1,62 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary">
+{% set route = app.request.attributes.get('_route') ?? '' %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-garage">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ path('app_home') }}">🏁 Garage</a>
+        <a class="navbar-brand" href="{{ path('app_home') }}"><span class="logo">DC</span>Drift <span>Club</span></a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-label="Menu">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarMain">
-            {# Liens à gauche #}
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                    <a class="nav-link {{ route == 'app_home' ? 'active' }}" href="{{ path('app_home') }}">Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_catalogue') }}">Catalogue</a>
+                    <a class="nav-link {{ route in ['app_catalogue', 'app_voiture_show'] ? 'active' }}" href="{{ path('app_catalogue') }}">Catalogue</a>
                 </li>
 
                 {% if is_granted('ROLE_STAFF') %}
-                    <li class="nav-item">
-                        <a class="nav-link text-warning" href="{{ path('app_gestion_rdv_index') }}">Rendez-vous</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-warning" href="{{ path('app_gestion_voiture_index') }}">Voitures</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-gestion dropdown-toggle {{ route starts with 'app_gestion' ? 'active' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Gestion</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('app_gestion_rdv_index') }}">Rendez-vous</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_gestion_voiture_index') }}">Voitures</a></li>
+                        </ul>
                     </li>
                 {% endif %}
 
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="{{ path('app_admin_marque_index') }}">Marques</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="{{ path('app_admin_modele_index') }}">Modèles</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="{{ path('app_admin_user_index') }}">Comptes</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-gestion dropdown-toggle {{ route starts with 'app_admin' ? 'active' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administration</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('app_admin_marque_index') }}">Marques</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_admin_modele_index') }}">Modèles</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_admin_user_index') }}">Comptes</a></li>
+                        </ul>
                     </li>
                 {% endif %}
             </ul>
 
-            {# Liens à droite #}
-            <ul class="navbar-nav">
+            <ul class="navbar-nav align-items-lg-center">
                 {% if app.user %}
+                    {% if not is_granted('ROLE_STAFF') %}
+                        <li class="nav-item">
+                            <a class="nav-link {{ route == 'app_rendez_vous_index' ? 'active' }}" href="{{ path('app_rendez_vous_index') }}">Mes rendez-vous</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_rendez_vous_index') }}">Mes rendez-vous</a>
+                        <a class="nav-link {{ route starts with 'app_profil' ? 'active' }}" href="{{ path('app_profil') }}">{{ app.user.prenom }}</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link mx-2" href="{{ path('app_profil') }}">Bonjour {{ app.user.prenom }}</a>
-                    </li>
-                    <li class="nav-item">
+                    <li class="nav-item ms-lg-2">
                         <a class="btn btn-outline-light btn-sm" href="{{ path('app_logout') }}">Déconnexion</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                        <a class="nav-link {{ route == 'app_login' ? 'active' }}" href="{{ path('app_login') }}">Connexion</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="btn btn-light btn-sm ms-2" href="{{ path('app_register') }}">Créer un compte</a>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-light btn-sm" href="{{ path('app_register') }}">Créer un compte</a>
                     </li>
                 {% endif %}
             </ul>

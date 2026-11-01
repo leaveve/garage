@@ -1169,3 +1169,6 @@ même principe que les marques : CRUD dans `Admin/ModeleController`, routes en `
 
 ### upload des photos
 le personnel peut ajouter, supprimer et choisir la photo principale d'une voiture
+
+
+ j'ai remplacé le `ColorType` (seulement un sélecteur) par un champ texte pour pouvoir taper le code exact, avec une contrainte `Regex` (`/^#[0-9A-Fa-f]{6}$/`) pour vérifier le format côté serveur. à côté, une pastille `<input type="color">` synchronisée en JS 

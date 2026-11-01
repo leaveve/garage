@@ -20,17 +20,10 @@ final class RendezVousController extends AbstractController
     ];
 
     #[Route('', name: 'app_gestion_rdv_index')]
-    public function index(Request $request, RendezVousRepository $rendezVousRepository): Response
+    public function index(RendezVousRepository $rendezVousRepository): Response
     {
-        // Filtre par statut via l'URL 
-        $statut = $request->query->get('statut');
-        $criteres = $statut ? ['statut' => $statut] : [];
-
-        $rendezVous = $rendezVousRepository->findBy($criteres, ['dateHeure' => 'ASC']);
-
         return $this->render('gestion/rendez_vous/index.html.twig', [
-            'rendezVous' => $rendezVous,
-            'statutActuel' => $statut,
+            'rendezVous' => $rendezVousRepository->findBy([], ['dateHeure' => 'ASC']),
         ]);
     }
 

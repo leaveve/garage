@@ -18,7 +18,14 @@
         <div class="col-md-3">{{ form_row(form.transmission, {attr: {class: 'form-select'}}) }}</div>
         <div class="col-md-3">{{ form_row(form.carburant, {attr: {class: 'form-select'}}) }}</div>
         <div class="col-md-4">{{ form_row(form.couleur, {attr: {class: 'form-control'}}) }}</div>
-        <div class="col-md-2">{{ form_row(form.couleurHex, {attr: {class: 'form-control form-control-color'}}) }}</div>
+        <div class="col-md-3">
+            {{ form_label(form.couleurHex) }}
+            <div class="input-group">
+                <input type="color" id="selecteur-couleur" class="form-control form-control-color flex-grow-0" value="{{ form.couleurHex.vars.value ?: '#888888' }}" title="Choisir une couleur">
+                {{ form_widget(form.couleurHex, {attr: {class: 'form-control text-uppercase'}}) }}
+            </div>
+            {{ form_errors(form.couleurHex) }}
+        </div>
         <div class="col-12">{{ form_row(form.description, {attr: {class: 'form-control'}}) }}</div>
     </div>
 
@@ -42,6 +49,27 @@
 {{ form_end(form) }}
 
 <script>
+    (() => {
+        const champHex = document.getElementById('voiture_couleurHex');
+        const selecteur = document.getElementById('selecteur-couleur');
+        if (!champHex || !selecteur) return;
+
+        champHex.addEventListener('input', () => {
+            let valeur = champHex.value.trim().toUpperCase();
+            if (valeur && !valeur.startsWith('#')) {
+                valeur = '#' + valeur;
+            }
+            champHex.value = valeur;
+            if (/^#[0-9A-F]{6}$/.test(valeur)) {
+                selecteur.value = valeur.toLowerCase();
+            }
+        });
+
+        selecteur.addEventListener('input', () => {
+            champHex.value = selecteur.value.toUpperCase();
+        });
+    })();
+
     (() => {
         const selectMarque = document.getElementById('voiture_marque');
         const selectModele = document.getElementById('voiture_modele');

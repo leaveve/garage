@@ -69,9 +69,9 @@ final class UserController extends AbstractController
             }
 
             $email = (new TemplatedEmail())
-                ->from(new Address('noreply@garage.fr', 'Garage'))
+                ->from(new Address('noreply@garage.fr', 'Drift Club'))
                 ->to($user->getEmail())
-                ->subject('Bienvenue dans l\'équipe du Garage')
+                ->subject('Bienvenue dans l\'équipe du Drift Club')
                 ->htmlTemplate('admin/user/invitation_email.html.twig')
                 ->context([
                     'user' => $user,

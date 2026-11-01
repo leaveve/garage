@@ -1,70 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes rendez-vous — Garage{% endblock %}
+{% block title %}Mes rendez-vous — Drift Club{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Mes rendez-vous</h1>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+        <div>
+            <p class="surtitre mb-2">Mon espace</p>
+            <h1 class="mb-0">Mes rendez-<span class="grad">vous</span></h1>
+        </div>
+        <a href="{{ path('app_catalogue') }}" class="btn btn-light">Nouvelle demande →</a>
+    </div>
 
     {% if rendezVous is empty %}
-        <p class="text-secondary">Vous n'avez encore aucune demande de rendez-vous.</p>
-        <a href="{{ path('app_catalogue') }}" class="btn btn-light">Voir le catalogue</a>
+        <div class="kanban-vide py-5">
+            <p class="mb-3">Vous n'avez encore aucune demande de rendez-vous.</p>
+            <a href="{{ path('app_catalogue') }}" class="btn btn-outline-light">Voir le catalogue</a>
+        </div>
     {% else %}
-        <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle">
-                <thead>
-                    <tr>
-                        <th>Voiture</th>
-                        <th>Motif</th>
-                        <th>Date du rendez-vous</th>
-                        <th>Location</th>
-                        <th>Statut</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for rdv in rendezVous %}
-                        <tr>
-                            <td>
-                                <a href="{{ path('app_voiture_show', {id: rdv.voiture.id}) }}" class="text-light">
+        {% set colonnes = [
+            {titre: 'En attente', statuts: ['en_attente'], classe: 'statut-en_attente'},
+            {titre: 'Acceptés', statuts: ['accepte'], classe: 'statut-accepte'},
+            {titre: 'Terminés', statuts: ['termine'], classe: 'statut-termine'},
+            {titre: 'Refusés & annulés', statuts: ['refuse', 'annule'], classe: 'statut-refuse'}
+        ] %}
+
+        <div class="kanban">
+            {% for colonne in colonnes %}
+                {% set liste = rendezVous|filter(r => r.statut in colonne.statuts) %}
+                <div class="kanban-colonne {{ colonne.classe }}">
+                    <div class="kanban-entete">
+                        <span class="point"></span>
+                        {{ colonne.titre }}
+                        <span class="compteur">{{ liste|length }}</span>
+                    </div>
+
+                    {% for rdv in liste %}
+                        {% set photo = rdv.voiture.photos|first %}
+                        <div class="rdv-carte statut-{{ rdv.statut }}">
+                            <div class="rdv-photo" {% if photo %}style="background-image: url('{{ asset('uploads/voitures/' ~ photo.nomFichier) }}')"{% endif %}>
+                                <span class="badge badge-location rdv-motif">{{ rdv.motif|capitalize }}</span>
+                            </div>
+                            <div class="rdv-corps">
+                                <a href="{{ path('app_voiture_show', {id: rdv.voiture.id}) }}" class="rdv-voiture">
                                     {{ rdv.voiture.modele.marque.libelle }} {{ rdv.voiture.modele.libelle }}
                                 </a>
-                            </td>
-                            <td>{{ rdv.motif|capitalize }}</td>
-                            <td>{{ rdv.dateHeure|date('d/m/Y à H:i') }}</td>
-                            <td>
-                                {% if rdv.motif == 'location' %}
-                                    du {{ rdv.dateDebutLocation|date('d/m/Y') }}
-                                    au {{ rdv.dateFinLocation|date('d/m/Y') }}
-                                {% else %}
-                                    —
+
+                                <div class="rdv-ligne">📅 <strong>{{ rdv.dateHeure|date('d/m/Y à H:i') }}</strong></div>
+                                {% if rdv.motif == 'location' and rdv.dateDebutLocation %}
+                                    <div class="rdv-ligne">🔑 du {{ rdv.dateDebutLocation|date('d/m') }} au {{ rdv.dateFinLocation|date('d/m/Y') }}</div>
                                 {% endif %}
-                            </td>
-                            <td>
+                                <div class="rdv-ligne">🕒 Demandé le {{ rdv.dateCreation|date('d/m/Y') }}</div>
+                                {% if rdv.statut == 'annule' %}
+                                    <div class="rdv-ligne">Annulé par vous</div>
+                                {% endif %}
+
+                                {% if rdv.message %}
+                                    <div class="rdv-message">« {{ rdv.message }} »</div>
+                                {% endif %}
+
                                 {% if rdv.statut == 'en_attente' %}
-                                    <span class="badge bg-warning text-dark">En attente</span>
-                                {% elseif rdv.statut == 'accepte' %}
-                                    <span class="badge bg-success">Accepté</span>
-                                {% elseif rdv.statut == 'refuse' %}
-                                    <span class="badge bg-danger">Refusé</span>
-                                {% elseif rdv.statut == 'termine' %}
-                                    <span class="badge bg-secondary">Terminé</span>
-                                {% elseif rdv.statut == 'annule' %}
-                                    <span class="badge bg-dark border border-secondary">Annulé</span>
+                                    <div class="rdv-actions">
+                                        <form method="post" action="{{ path('app_rendez_vous_annuler', {id: rdv.id}) }}" class="statut-refuse"
+                                              onsubmit="return confirm('Annuler cette demande de rendez-vous ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ rdv.id) }}">
+                                            <button class="btn btn-sm btn-statut">Annuler la demande</button>
+                                        </form>
+                                    </div>
                                 {% endif %}
-                            </td>
-                            <td>
-                                {% if rdv.statut == 'en_attente' %}
-                                    <form method="post" action="{{ path('app_rendez_vous_annuler', {id: rdv.id}) }}"
-                                        onsubmit="return confirm('Annuler cette demande de rendez-vous ?');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ rdv.id) }}">
-                                        <button class="btn btn-sm btn-outline-danger">Annuler</button>
-                                    </form>
-                                {% endif %}
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="kanban-vide">Aucun rendez-vous</div>
                     {% endfor %}
-                </tbody>
-            </table>
+                </div>
+            {% endfor %}
         </div>
     {% endif %}
 {% endblock %}

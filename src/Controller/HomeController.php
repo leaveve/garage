@@ -2,25 +2,22 @@
 
 namespace App\Controller;
 
+use App\Repository\MarqueRepository;
+use App\Repository\VoitureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\VoitureRepository;
 
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-        public function index(VoitureRepository $voitureRepository): Response
+    public function index(VoitureRepository $voitureRepository, MarqueRepository $marqueRepository): Response
     {
-            // Les 3 dernières voitures disponibles ajoutées
-            $dernieresVoitures = $voitureRepository->findBy(
-            ['statut' => 'disponible'],
-            ['id' => 'DESC'],
-            3
-        );
-
-            return $this->render('home/index.html.twig', [
-            'dernieresVoitures' => $dernieresVoitures,
+        return $this->render('home/index.html.twig', [
+            'dernieresVoitures' => $voitureRepository->findBy(['statut' => 'disponible'], ['id' => 'DESC'], 3),
+            'nbDisponibles' => $voitureRepository->count(['statut' => 'disponible']),
+            'nbLocation' => $voitureRepository->count(['statut' => 'disponible', 'aLouer' => true]),
+            'marques' => $marqueRepository->findBy([], ['libelle' => 'ASC']),
         ]);
     }
 }

@@ -33,6 +33,11 @@ final class RendezVousController extends AbstractController
     #[Route('/nouveau/{id}', name: 'app_rendez_vous_new', requirements: ['id' => '\d+'])]
     public function new(Voiture $voiture, Request $request, EntityManagerInterface $em): Response
     {
+        if ($this->isGranted('ROLE_STAFF')) {
+            $this->addFlash('warning', 'Les membres du garage ne peuvent pas prendre de rendez-vous.');
+            return $this->redirectToRoute('app_voiture_show', ['id' => $voiture->getId()]);
+        }
+
         // On ne peut pas demander un rendez-vous pour une voiture plus disponible
         if ($voiture->getStatut() !== 'disponible') {
             $this->addFlash('warning', 'Cette voiture n\'est plus disponible.');

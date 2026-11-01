@@ -1,4 +1,4 @@
-# Garage  Vente & Location de voitures
+# Drift Club — Vente & Location de voitures
 
 Site web pour un garage automobile qui vend et loue des voitures.
 Les visiteurs peuvent consulter le catalogue, les clients peuvent réserver une location ou demander un rendez-vous (essai ou achat), et l'équipe du garage gère les annonces, les réservations et les comptes depuis un espace de gestion.

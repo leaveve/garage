@@ -1,78 +1,84 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des rendez-vous — Garage{% endblock %}
+{% block title %}Gestion des rendez-vous — Drift Club{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Gestion des rendez-vous</h1>
+    <p class="surtitre mb-2">Back-office</p>
+    <h1 class="mb-4">Rendez-<span class="grad">vous</span></h1>
 
-    {# Filtres par statut #}
-    {% set filtres = {'': 'Tous', 'en_attente': 'En attente', 'accepte': 'Acceptés', 'termine': 'Terminés', 'refuse': 'Refusés', 'annule': 'Annulés'} %}
-    <div class="mb-4">
-        {% for valeur, label in filtres %}
-            <a href="{{ path('app_gestion_rdv_index', valeur ? {statut: valeur} : {}) }}"
-               class="btn btn-sm {{ statutActuel == valeur ? 'btn-light' : 'btn-outline-light' }} me-1 mb-1">
-                {{ label }}
-            </a>
+    {% set colonnes = [
+        {titre: 'En attente', statuts: ['en_attente'], classe: 'statut-en_attente'},
+        {titre: 'Acceptés', statuts: ['accepte'], classe: 'statut-accepte'},
+        {titre: 'Terminés', statuts: ['termine'], classe: 'statut-termine'},
+        {titre: 'Refusés & annulés', statuts: ['refuse', 'annule'], classe: 'statut-refuse'}
+    ] %}
+
+    {% set actions = {
+        'en_attente': {'accepte': 'Accepter', 'refuse': 'Refuser'},
+        'accepte': {'termine': 'Terminer', 'refuse': 'Refuser'}
+    } %}
+
+    <div class="kanban">
+        {% for colonne in colonnes %}
+            {% set liste = rendezVous|filter(r => r.statut in colonne.statuts) %}
+            <div class="kanban-colonne {{ colonne.classe }}">
+                <div class="kanban-entete">
+                    <span class="point"></span>
+                    {{ colonne.titre }}
+                    <span class="compteur">{{ liste|length }}</span>
+                </div>
+
+                {% for rdv in liste %}
+                    {% set photo = rdv.voiture.photos|first %}
+                    <div class="rdv-carte statut-{{ rdv.statut }}">
+                        <div class="rdv-photo" {% if photo %}style="background-image: url('{{ asset('uploads/voitures/' ~ photo.nomFichier) }}')"{% endif %}>
+                            <span class="badge badge-location rdv-motif">{{ rdv.motif|capitalize }}</span>
+                        </div>
+                        <div class="rdv-corps">
+                            <a href="{{ path('app_voiture_show', {id: rdv.voiture.id}) }}" class="rdv-voiture">
+                                {{ rdv.voiture.modele.marque.libelle }} {{ rdv.voiture.modele.libelle }}
+                            </a>
+
+                            <div class="rdv-ligne">📅 <strong>{{ rdv.dateHeure|date('d/m/Y à H:i') }}</strong></div>
+                            {% if rdv.motif == 'location' and rdv.dateDebutLocation %}
+                                <div class="rdv-ligne">🔑 du {{ rdv.dateDebutLocation|date('d/m') }} au {{ rdv.dateFinLocation|date('d/m/Y') }}</div>
+                            {% endif %}
+
+                            <div class="rdv-ligne">👤 <strong>{{ rdv.client.prenom }} {{ rdv.client.nom }}</strong></div>
+                            <div class="rdv-ligne">✉️ {{ rdv.client.email }}</div>
+                            {% if rdv.client.telephone %}
+                                <div class="rdv-ligne">📞 {{ rdv.client.telephone }}</div>
+                            {% endif %}
+                            {% if rdv.motif == 'location' %}
+                                <div class="rdv-ligne">
+                                    🪪
+                                    {% if rdv.client.dateNaissance %}{{ rdv.client.dateNaissance.diff(date()).y }} ans{% else %}âge inconnu{% endif %}
+                                    ·
+                                    {% if rdv.client.datePermis %}permis depuis {{ rdv.client.datePermis.diff(date()).y }} ans{% else %}permis non renseigné{% endif %}
+                                </div>
+                            {% endif %}
+
+                            {% if rdv.message %}
+                                <div class="rdv-message">« {{ rdv.message }} »</div>
+                            {% endif %}
+
+                            {% if actions[rdv.statut] is defined %}
+                                <div class="rdv-actions">
+                                    {% for nouveau, libelle in actions[rdv.statut] %}
+                                        <form method="post" action="{{ path('app_gestion_rdv_statut', {id: rdv.id}) }}" class="statut-{{ nouveau }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('statut' ~ rdv.id) }}">
+                                            <input type="hidden" name="statut" value="{{ nouveau }}">
+                                            <button class="btn btn-sm btn-statut">{{ libelle }}</button>
+                                        </form>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="kanban-vide">Aucun rendez-vous</div>
+                {% endfor %}
+            </div>
         {% endfor %}
     </div>
-
-    {% if rendezVous is empty %}
-        <p class="text-secondary">Aucun rendez-vous.</p>
-    {% else %}
-        <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Client</th>
-                        <th>Voiture</th>
-                        <th>Motif</th>
-                        <th>Statut</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for rdv in rendezVous %}
-                        <tr>
-                            <td>{{ rdv.dateHeure|date('d/m/Y à H:i') }}</td>
-                            <td>
-                                {{ rdv.client.prenom }} {{ rdv.client.nom }}<br>
-                                <small class="text-secondary">{{ rdv.client.email }} · {{ rdv.client.telephone ?? '—' }}</small>
-                            </td>
-                            <td>
-                                <a href="{{ path('app_voiture_show', {id: rdv.voiture.id}) }}" class="text-light">
-                                    {{ rdv.voiture.modele.marque.libelle }} {{ rdv.voiture.modele.libelle }}
-                                </a>
-                            </td>
-                            <td>
-                                {{ rdv.motif|capitalize }}
-                                {% if rdv.motif == 'location' %}
-                                    <br><small class="text-secondary">
-                                        du {{ rdv.dateDebutLocation|date('d/m') }} au {{ rdv.dateFinLocation|date('d/m/Y') }}
-                                    </small>
-                                {% endif %}
-                                {% if rdv.message %}
-                                    <br><small class="text-secondary fst-italic">« {{ rdv.message }} »</small>
-                                {% endif %}
-                            </td>
-                            <td>{{ rdv.statut|replace({'_': ' '})|capitalize }}</td>
-                            <td>
-                                {% set actions = {
-                                    'en_attente': {'accepte': ['Accepter', 'success'], 'refuse': ['Refuser', 'danger']},
-                                    'accepte':    {'termine': ['Terminer', 'secondary'], 'refuse': ['Refuser', 'danger']}
-                                } %}
-                                {% for nouveau, bouton in actions[rdv.statut] ?? {} %}
-                                    <form method="post" action="{{ path('app_gestion_rdv_statut', {id: rdv.id}) }}" class="d-inline">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('statut' ~ rdv.id) }}">
-                                        <input type="hidden" name="statut" value="{{ nouveau }}">
-                                        <button class="btn btn-sm btn-{{ bouton[1] }}">{{ bouton[0] }}</button>
-                                    </form>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% endif %}
 {% endblock %}

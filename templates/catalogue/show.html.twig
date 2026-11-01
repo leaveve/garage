@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ voiture.modele.marque.libelle }} {{ voiture.modele.libelle }} — Garage{% endblock %}
+{% block title %}{{ voiture.modele.marque.libelle }} {{ voiture.modele.libelle }} — Drift Club{% endblock %}
 
 {% block body %}
     <a href="{{ path('app_catalogue') }}" class="text-secondary text-decoration-none">← Retour au catalogue</a>
@@ -83,13 +83,16 @@
             </table>
 
             {# Bouton de rdv #}
-            {% if voiture.statut == 'disponible' %}
+            {% if is_granted('ROLE_STAFF') %}
+                <a href="{{ path('app_gestion_voiture_edit', {id: voiture.id}) }}" class="btn btn-light btn-lg w-100">Modifier l'annonce</a>
+                {% if voiture.statut != 'disponible' %}
+                    <p class="text-secondary small mt-2 mb-0">Statut actuel : {{ voiture.statut == 'louee' ? 'louée' : 'vendue' }} (non visible dans le catalogue).</p>
+                {% endif %}
+            {% elseif voiture.statut == 'disponible' %}
                 {% if app.user %}
                     <a href="{{ path('app_rendez_vous_new', {id: voiture.id}) }}" class="btn btn-light btn-lg w-100">Demander un rendez-vous</a>
                 {% else %}
-                    <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg w-100">
-                        Connectez-vous pour prendre rendez-vous
-                    </a>
+                    <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg w-100">Connectez-vous pour prendre rendez-vous</a>
                 {% endif %}
             {% else %}
                 <p class="alert alert-secondary">Cette voiture n'est plus disponible.</p>

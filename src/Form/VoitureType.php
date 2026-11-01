@@ -10,7 +10,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -19,6 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Regex;
 use App\Entity\Marque;
 
 class VoitureType extends AbstractType
@@ -55,9 +55,19 @@ class VoitureType extends AbstractType
                 'choice_label' => 'libelle',
             ])
             ->add('couleur', TextType::class, ['label' => 'Nom de la couleur'])
-            ->add('couleurHex', ColorType::class, [
-                'label' => 'Couleur exacte',
+            ->add('couleurHex', TextType::class, [
+                'label' => 'Code couleur (hexa)',
                 'required' => false,
+                'attr' => [
+                    'placeholder' => '#D40000',
+                    'maxlength' => 7,
+                ],
+                'constraints' => [
+                    new Regex(
+                        pattern: '/^#[0-9A-Fa-f]{6}$/',
+                        message: 'Le code couleur doit être au format #RRGGBB, par exemple #D40000.',
+                    ),
+                ],
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
@@ -103,9 +113,9 @@ class VoitureType extends AbstractType
                 'constraints' => [
                     new All(constraints: [
                         new File(
-                            maxSize: '5M',
+                            maxSize: '10M',
                             mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
-                            mimeTypesMessage: 'Seules les images JPG, PNG ou WEBP sont acceptées.',
+                            mimeTypesMessage: 'Seules les images JPG, PNG ou WEBP de 10 Mo maximum sont acceptées.',
                         ),
                     ]),
                 ],

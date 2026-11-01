@@ -1,26 +1,92 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil — Garage{% endblock %}
+{% block title %}Accueil — Drift Club{% endblock %}
 
-{% block body %}
-    {# Bandeau de présentation #}
-    <section class="p-5 mb-5 rounded-3 bg-black border border-secondary text-center">
-        <h1 class="display-5 fw-bold">Voitures de sport & de prestige</h1>
-        <p class="lead text-secondary col-lg-8 mx-auto">
-            Achat ou location de voitures d'exception : JDM, muscle cars, supercars.
-            Prenez rendez-vous en ligne et venez les découvrir au garage.
-        </p>
-        <a href="{{ path('app_catalogue') }}" class="btn btn-light btn-lg mt-3">Voir le catalogue</a>
-        {% if not app.user %}
-            <a href="{{ path('app_register') }}" class="btn btn-outline-light btn-lg mt-3 ms-2">Créer un compte</a>
-        {% endif %}
+{% block hero %}
+    {% set vedette = dernieresVoitures|first %}
+    <section class="hero">
+        <div class="vitesse"></div>
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <p class="surtitre reveal mb-3">Sport · Luxe · Passion</p>
+                    <h1 class="reveal mb-4" style="--delai: .1s">
+                        Pilotez <span class="grad italique">l'exception</span>.
+                    </h1>
+                    <p class="lead text-secondary reveal mb-4" style="--delai: .2s">
+                        JDM, muscle cars, supercars : achetez ou louez la voiture de vos rêves.
+                        Réservez un rendez-vous en ligne, on s'occupe du reste.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 reveal mb-5" style="--delai: .3s">
+                        <a href="{{ path('app_catalogue') }}" class="btn btn-light btn-lg">Explorer le catalogue →</a>
+                        {% if not app.user %}
+                            <a href="{{ path('app_register') }}" class="btn btn-outline-light btn-lg">Créer un compte</a>
+                        {% endif %}
+                    </div>
+                    <div class="stats reveal" style="--delai: .4s">
+                        <div>
+                            <div class="valeur grad" data-compteur="{{ nbDisponibles }}">0</div>
+                            <div class="libelle">Voitures dispo</div>
+                        </div>
+                        <div>
+                            <div class="valeur" data-compteur="{{ nbLocation }}">0</div>
+                            <div class="libelle">À louer</div>
+                        </div>
+                        <div>
+                            <div class="valeur" data-compteur="{{ marques|length }}">0</div>
+                            <div class="libelle">Marques</div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if vedette %}
+                    {% set photoVedette = vedette.photos|first %}
+                    <div class="col-lg-6 reveal" style="--delai: .25s">
+                        <a href="{{ path('app_voiture_show', {id: vedette.id}) }}" class="d-block text-reset text-decoration-none">
+                            <div class="hero-visuel">
+                                {% if photoVedette %}
+                                    <img src="{{ asset('uploads/voitures/' ~ photoVedette.nomFichier) }}" alt="{{ vedette.modele.marque.libelle }} {{ vedette.modele.libelle }}">
+                                {% endif %}
+                                <div class="hero-etiquette">
+                                    <div>
+                                        <div class="text-secondary small">Nouveauté</div>
+                                        <div class="fw-bold">{{ vedette.modele.marque.libelle }} {{ vedette.modele.libelle }}</div>
+                                    </div>
+                                    <div class="prix grad">{{ vedette.puissanceCh }} ch</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </section>
 
-    {# Dernières arrivées #}
-    <h2 class="mb-4">Dernières arrivées</h2>
+    {% if marques is not empty %}
+        <div class="defilement">
+            <div class="defilement-piste">
+                {% for i in 1..2 %}
+                    {% for marque in marques %}
+                        <a href="{{ path('app_catalogue', {marque: marque.id}) }}">{{ marque.libelle }}</a>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4 reveal">
+        <div>
+            <p class="surtitre mb-2">Fraîchement arrivées</p>
+            <h2 class="mb-0">Dernières <span class="grad">arrivées</span></h2>
+        </div>
+        <a href="{{ path('app_catalogue') }}" class="btn btn-outline-light">Tout voir →</a>
+    </div>
+
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for voiture in dernieresVoitures %}
-            <div class="col">
+            <div class="col reveal" style="--delai: {{ loop.index0 * 0.1 }}s">
                 {% include 'partials/carte_voiture.html.twig' %}
             </div>
         {% else %}
@@ -28,19 +94,27 @@
         {% endfor %}
     </div>
 
-    {# Comment ça marche #}
-    <section class="row text-center mt-5 g-4">
-        <div class="col-md-4">
-            <h5>1. Choisissez</h5>
-            <p class="text-secondary">Parcourez notre catalogue de voitures à vendre ou à louer.</p>
+    <section class="mt-5 pt-5">
+        <div class="text-center mb-5 reveal">
+            <p class="surtitre mb-2">Comment ça marche</p>
+            <h2>Trois étapes vers <span class="grad">le volant</span></h2>
         </div>
-        <div class="col-md-4">
-            <h5>2. Prenez rendez-vous</h5>
-            <p class="text-secondary">Demandez un essai, une location ou un achat en ligne.</p>
-        </div>
-        <div class="col-md-4">
-            <h5>3. Venez au garage</h5>
-            <p class="text-secondary">Notre équipe vous accueille pour finaliser sur place.</p>
+        <div class="row g-4">
+            {% set etapes = [
+                {titre: 'Choisissez', texte: 'Parcourez notre sélection de voitures à vendre ou à louer, filtrez par marque ou par type.'},
+                {titre: 'Réservez', texte: 'Demandez un essai, une location ou un achat en ligne en quelques clics.'},
+                {titre: 'Prenez le volant', texte: 'Notre équipe vous accueille au garage pour finaliser et vous remettre les clés.'}
+            ] %}
+            {% for etape in etapes %}
+                <div class="col-md-4 reveal" style="--delai: {{ loop.index0 * 0.12 }}s">
+                    <div class="etape">
+                        <div class="etape-numero">0{{ loop.index }}</div>
+                        <div class="etape-icone">{{ loop.index }}</div>
+                        <h5>{{ etape.titre }}</h5>
+                        <p class="text-secondary mb-0">{{ etape.texte }}</p>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </section>
 {% endblock %}
