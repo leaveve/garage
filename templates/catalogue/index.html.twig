@@ -5,8 +5,54 @@
 {% block body %}
     <h1 class="mb-4">Notre catalogue</h1>
 
+    <form method="get" action="{{ path('app_catalogue') }}" data-turbo="false" class="row g-2 align-items-end mb-4 p-3 rounded bg-black border border-secondary">
+        <div class="col-md-3">
+            <label class="form-label small text-secondary" for="filtre-marque">Marque</label>
+            <select name="marque" id="filtre-marque" class="form-select">
+                <option value="">Toutes</option>
+                {% for marque in marques %}
+                    <option value="{{ marque.id }}" {{ filtres.marque == marque.id ? 'selected' }}>{{ marque.libelle }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label small text-secondary" for="filtre-type">Type</label>
+            <select name="type" id="filtre-type" class="form-select">
+                <option value="">Tous</option>
+                {% for type in types %}
+                    <option value="{{ type.id }}" {{ filtres.type == type.id ? 'selected' }}>{{ type.libelle }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small text-secondary" for="filtre-mode">Je veux</label>
+            <select name="mode" id="filtre-mode" class="form-select">
+                <option value="">Acheter ou louer</option>
+                <option value="vente" {{ filtres.mode == 'vente' ? 'selected' }}>Acheter</option>
+                <option value="location" {{ filtres.mode == 'location' ? 'selected' }}>Louer</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small text-secondary" for="filtre-tri">Trier par</label>
+            <select name="tri" id="filtre-tri" class="form-select">
+                <option value="">Plus récentes</option>
+                <option value="prix_asc" {{ filtres.tri == 'prix_asc' ? 'selected' }}>Prix croissant</option>
+                <option value="prix_desc" {{ filtres.tri == 'prix_desc' ? 'selected' }}>Prix décroissant</option>
+                <option value="puissance" {{ filtres.tri == 'puissance' ? 'selected' }}>Plus puissantes</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button class="btn btn-light w-100">Filtrer</button>
+            <a href="{{ path('app_catalogue') }}" class="btn btn-outline-light" title="Réinitialiser">✕</a>
+        </div>
+    </form>
+
+    <p class="text-secondary small">
+        {{ voitures|length }} voiture{{ voitures|length > 1 ? 's' }} trouvée{{ voitures|length > 1 ? 's' }}
+    </p>
+
     {% if voitures is empty %}
-        <p class="text-secondary">Aucune voiture disponible pour le moment.</p>
+        <p class="text-secondary">Aucune voiture ne correspond à votre recherche.</p>
     {% else %}
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for voiture in voitures %}
