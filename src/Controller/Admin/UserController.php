@@ -6,11 +6,16 @@ use App\Entity\User;
 use App\Form\StaffType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
+use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
 #[Route('/admin/compte')]
 final class UserController extends AbstractController
@@ -36,20 +41,46 @@ final class UserController extends AbstractController
     }
 
     #[Route('/nouveau-personnel', name: 'app_admin_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): Response
-    {
+    public function new(
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $hasher,
+        ResetPasswordHelperInterface $resetPasswordHelper,
+        MailerInterface $mailer,
+    ): Response {
         $user = new User();
         $form = $this->createForm(StaffType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Mot de passe aléatoire que personne ne connaît : l'employé choisira le sien via l'invitation
             $user->setRoles(['ROLE_STAFF'])
-                ->setPassword($hasher->hashPassword($user, $form->get('plainPassword')->getData()));
+                ->setPassword($hasher->hashPassword($user, bin2hex(random_bytes(32))));
 
             $em->persist($user);
             $em->flush();
 
-            $this->addFlash('success', 'Le compte de ' . $user->getPrenom() . ' a été créé.');
+            try {
+                // Même jeton que pour « mot de passe oublié »
+                $resetToken = $resetPasswordHelper->generateResetToken($user);
+            } catch (ResetPasswordExceptionInterface $e) {
+                $this->addFlash('warning', 'Le compte a été créé, mais l\'invitation n\'a pas pu être envoyée. L\'employé peut utiliser « Mot de passe oublié ».');
+                return $this->redirectToRoute('app_admin_user_index');
+            }
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('noreply@garage.fr', 'Garage'))
+                ->to($user->getEmail())
+                ->subject('Bienvenue dans l\'équipe du Garage')
+                ->htmlTemplate('admin/user/invitation_email.html.twig')
+                ->context([
+                    'user' => $user,
+                    'resetToken' => $resetToken,
+                ]);
+
+            $mailer->send($email);
+
+            $this->addFlash('success', 'Une invitation a été envoyée à ' . $user->getEmail() . '.');
             return $this->redirectToRoute('app_admin_user_index');
         }
 
