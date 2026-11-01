@@ -19,5 +19,5 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 
-/public/uploads/voitures/*
-!/public/uploads/voitures/demo-*
+
+/public/uploads/marques/*

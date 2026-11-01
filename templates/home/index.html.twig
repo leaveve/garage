@@ -67,7 +67,12 @@
             <div class="defilement-piste">
                 {% for i in 1..2 %}
                     {% for marque in marques %}
-                        <a href="{{ path('app_catalogue', {marque: marque.id}) }}">{{ marque.libelle }}</a>
+                        <a href="{{ path('app_catalogue', {marque: marque.id}) }}">
+                            {% if marque.logo %}
+                                {% include 'partials/logo_marque.html.twig' with {marque: marque, taille: 40} %}
+                            {% endif %}
+                            {{ marque.libelle }}
+                        </a>
                     {% endfor %}
                 {% endfor %}
             </div>

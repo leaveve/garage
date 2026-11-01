@@ -1,9 +1,20 @@
 {{ form_start(form) }}
     {{ form_errors(form) }}
 
-    <div class="col-md-6">
-        {{ form_row(form.libelle, {attr: {class: 'form-control'}}) }}
+    <div class="row g-4 align-items-center">
+        <div class="col-auto">
+            {% if marque.id %}
+                {% include 'partials/logo_marque.html.twig' with {marque: marque, taille: 96} %}
+            {% else %}
+                <span class="logo-marque" style="--taille: 96px"><span class="logo-initiales">?</span></span>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.libelle, {attr: {class: 'form-control'}}) }}
+            {{ form_row(form.logoFichier, {attr: {class: 'form-control'}}) }}
+            <p class="text-secondary small mb-0">PNG avec fond transparent ou SVG conseillé. Laisser vide pour garder le logo actuel.</p>
+        </div>
     </div>
 
-    <button class="btn btn-light btn-lg mt-3">{{ button_label|default('Enregistrer') }}</button>
+    <button class="btn btn-light btn-lg mt-4">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}

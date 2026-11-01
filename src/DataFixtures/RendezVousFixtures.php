@@ -34,7 +34,7 @@ class RendezVousFixtures extends Fixture implements DependentFixtureInterface
             $dateHeure = $this->faker->dateTimeBetween('+1 day', '+30 days');
 
             $rdv->setClient($this->getReference('client_' . $this->faker->numberBetween(1, 9), User::class))
-                ->setVoiture($this->getReference('voiture_' . $this->faker->numberBetween(1, 20), Voiture::class))
+                ->setVoiture($this->getReference('voiture_' . $this->faker->numberBetween(1, count(VoitureFixtures::getVoituresArray())), Voiture::class))
                 ->setMotif($motif)
                 ->setMessage($this->faker->sentence(12))
                 ->setStatut($this->faker->randomElement(['en_attente', 'en_attente', 'accepte', 'refuse', 'termine']))

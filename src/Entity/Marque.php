@@ -18,6 +18,9 @@ class Marque
     #[ORM\Column(length: 100)]
     private ?string $libelle = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $logo = null;
+
     /**
      * @var Collection<int, Modele>
      */
@@ -72,6 +75,18 @@ class Marque
                 $modele->setMarque(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(?string $logo): static
+    {
+        $this->logo = $logo;
 
         return $this;
     }

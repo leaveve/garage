@@ -1,0 +1,7 @@
+<span class="logo-marque {{ classe|default('') }}" style="--taille: {{ taille|default(56) }}px">
+    {% if marque.logo %}
+        <img src="{{ asset('uploads/marques/' ~ marque.logo) }}" alt="{{ marque.libelle }}" loading="lazy">
+    {% else %}
+        <span class="logo-initiales">{{ marque.libelle|slice(0, 2)|upper }}</span>
+    {% endif %}
+</span>

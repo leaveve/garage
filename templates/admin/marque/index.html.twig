@@ -1,33 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Marques — Administration{% endblock %}
+{% block title %}Marques — Drift Club{% endblock %}
 
 {% block body %}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Marques</h1>
-        <a href="{{ path('app_admin_marque_new') }}" class="btn btn-light">+ Ajouter une marque</a>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+        <div>
+            <p class="surtitre mb-2">Administration</p>
+            <h1 class="mb-0">Les <span class="grad">marques</span></h1>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_admin_modele_index') }}" class="btn btn-outline-light">Voir les modèles</a>
+            <a href="{{ path('app_admin_marque_new') }}" class="btn btn-light">+ Ajouter une marque</a>
+        </div>
     </div>
 
-    <table class="table table-dark table-hover align-middle">
-        <thead>
-            <tr>
-                <th>Marque</th>
-                <th>Modèles</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for marque in marques %}
-                <tr>
-                    <td>{{ marque.libelle }}</td>
-                    <td>{{ marque.modeles|length }}</td>
-                    <td class="text-end">
-                        <a href="{{ path('app_admin_marque_edit', {id: marque.id}) }}" class="btn btn-sm btn-light">Modifier</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr><td colspan="3" class="text-secondary">Aucune marque.</td></tr>
+    <p class="text-secondary small mb-4">{{ marques|length }} marque{{ marques|length > 1 ? 's' }}</p>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+        {% for marque in marques %}
+            {% set nbVoitures = 0 %}
+            {% for modele in marque.modeles %}
+                {% set nbVoitures = nbVoitures + modele.voitures|length %}
             {% endfor %}
-        </tbody>
-    </table>
+            <div class="col">
+                <div class="marque-carte h-100">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        {% include 'partials/logo_marque.html.twig' with {marque: marque, taille: 60} %}
+                        <div>
+                            <h5 class="mb-1">{{ marque.libelle }}</h5>
+                            <div class="text-secondary small">
+                                {{ marque.modeles|length }} modèle{{ marque.modeles|length > 1 ? 's' }}
+                                · {{ nbVoitures }} voiture{{ nbVoitures > 1 ? 's' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-1 mb-3">
+                        {% for modele in marque.modeles %}
+                            <span class="chip">{{ modele.libelle }}</span>
+                        {% else %}
+                            <span class="text-secondary small">Aucun modèle</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex gap-2 mt-auto">
+                        <a href="{{ path('app_admin_marque_edit', {id: marque.id}) }}" class="btn btn-sm btn-light flex-fill">Modifier</a>
+                        <a href="{{ path('app_admin_modele_new', {marque: marque.id}) }}" class="btn btn-sm btn-outline-light flex-fill">+ Modèle</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-secondary">Aucune marque.</p>
+        {% endfor %}
+    </div>
 {% endblock %}
