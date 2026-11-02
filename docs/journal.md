@@ -1095,7 +1095,7 @@ toute la carte du catalogue est cliquable grâce à `stretched-link`
 ## demande de rendez-vous (branche feature/rendez-vous) 
 
 ### le formulaire
-j'ai créé `src/Form/RendezVousType.php` avc  motif (menu déroulant), date et heure, dates de location et message
+j'ai créé `src/Form/RendezVousType.php` avc  motif , date et heure, dates de location et message
 le client ne choisit PAS le client, la voiture, le statut ni la date de création, c'est le contrôleur qui les remplit
 les motifs proposés dépendent de la voiture pas de loc si elle n'est pas à louer, pas de achat si elle n'est pas à vendre
 
@@ -1149,10 +1149,10 @@ le personnel peut voir et modifier, mais seul le gérant peut ajouter et supprim
 j'ai mis `#[IsGranted('ROLE_ADMIN')]` sur les méthodes `new()` et `delete()`
 
 **corrections du formulaire généré (VoitureType) :**
-- les menus des relations affichaient les id (`choice_label => 'id'`) → j'ai mis `libelle`, et pour le modèle une petite fonction qui affiche « Marque Modèle »
-- `couleurHex` en `ColorType` (sélecteur de couleur)
-- `aVendre` / `aLouer` en cases à cocher pas obligatoires
-- `statut` en liste déroulante (disponible / louée / vendue)
+-les menus des relations affichaient les id (`choice_label => 'id'`) → j'ai mis `libelle`, et pour le modèle une petite fonction qui affiche « Marque Modèle »
+- couleurHex` en `ColorType` (sélecteur de couleur)
+-`aVendre` / `aLouer` en cases à cocher pas obligatoires
+-statut` en liste déroulante (disponible / louée / vendue)
 
 ### mise en forme de la gestion des voitures
 - liste en français avec la photo principale, le prix de vente, le prix de location et le statut en badge de couleur

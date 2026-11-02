@@ -83,3 +83,4 @@ Mot de passe pour tous : `password`
 
 - MCD:[docs/mcd.drawio.png](docs/mcd.drawio.png)
 - Journal le détail de toutes mes étapes de travail est dans [docs/journal.md](docs/journal.md)
+- Utilisation de l'IA : [docs/utilisationIA.md](docs/utilisationIA.md)
